@@ -1,0 +1,31 @@
+name: actionlint
+
+on:
+  push:
+    paths:
+      - ".github/workflows/**"
+      - ".github/actions/**"
+  pull_request:
+    paths:
+      - ".github/workflows/**"
+      - ".github/actions/**"
+
+jobs:
+  actionlint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download actionlint
+        id: get_actionlint
+        run: |
+          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+        shell: bash
+
+      - name: Check workflow files
+        run: |
+          echo "Running actionlint to check GitHub Actions workflow files..."
+          ${{ steps.get_actionlint.outputs.executable }} .github/workflows/**/*.yml \
+            || echo "Issues found in workflow files - please review and fix manually"
+        shell: bash

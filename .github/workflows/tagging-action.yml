@@ -1,0 +1,69 @@
+name: Reusable Tagging Workflow
+
+on:
+  workflow_call:
+    inputs:
+      version_file:
+        description: "Version file path"
+        required: false
+        type: string
+        default: "VERSION"
+      tag_prefix:
+        description: "Tag prefix (e.g., 'v' for v1.0.0)"
+        required: false
+        type: string
+        default: "v"
+      runs_on:
+        description: "Runner to use for the job"
+        required: false
+        type: string
+        default: "ubuntu-24.04"
+      git_user_name:
+        description: "Git user name for commits"
+        required: false
+        type: string
+        default: "github-actions[bot]"
+      git_user_email:
+        description: "Git user email for commits"
+        required: false
+        type: string
+        default: "github-actions[bot]@users.noreply.github.com"
+
+jobs:
+  update-tag:
+    runs-on: ${{ inputs.runs_on }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Read VERSION file
+        id: read_version
+        run: |
+          if [ -f "${{ inputs.version_file }}" ]; then
+            VERSION=$(cat "${{ inputs.version_file }}")
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
+            echo "Found version: $VERSION"
+          else
+            echo "Error: Version file '${{ inputs.version_file }}' not found"
+            exit 1
+          fi
+
+      - name: Create and push tag
+        env:
+          VERSION: ${{ env.VERSION }}
+        run: |
+          git config user.name "${{ inputs.git_user_name }}"
+          git config user.email "${{ inputs.git_user_email }}"
+
+          TAG_NAME="${{ inputs.tag_prefix }}$VERSION"
+          echo "Creating tag: $TAG_NAME"
+
+          if git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
+            echo "Warning: Tag $TAG_NAME already exists, skipping"
+            exit 0
+          fi
+
+          git tag -a "$TAG_NAME" -m "Release version $VERSION"
+          git push origin "$TAG_NAME"
+          echo "Successfully created and pushed tag: $TAG_NAME"
