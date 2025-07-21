@@ -1,53 +1,10 @@
 # umatare5/common
 
-A collection of reusable GitHub Actions workflows and custom actions for common development tasks.
+A collection of reusable GitHub Actions workflows and custom actions for common development tasks and others.
 
-> [!NOTE]
-> For detailed information about GitHub Actions workflows, development instructions, and configuration files, see [.github/README.md](.github/README.md).
+## 📋 Index
 
-## 📋 Table of Contents
-
-- [🚀 Quick Start](#-quick-start)
-- [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
-
-## 🚀 Quick Start
-
-### Complete CI/CD Pipeline Example
-
-```yaml
-name: Complete Pipeline
-
-on:
-  push:
-    branches: [main]
-    tags: ["v*"]
-  pull_request:
-    branches: [main]
-
-permissions:
-  contents: write
-  packages: write
-  id-token: write
-
-jobs:
-  # Code quality check for PRs
-  lint:
-    if: github.event_name == 'pull_request'
-    uses: umatare5/common/.github/workflows/golangci-lint-action.yml@main
-
-  # Auto-tagging when VERSION file changes
-  tag:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    uses: umatare5/common/.github/workflows/tagging-action.yml@main
-
-  # Release when tags are pushed
-  release:
-    if: startsWith(github.ref, 'refs/tags/v')
-    uses: umatare5/common/.github/workflows/goreleaser-action.yml@main
-```
-
-For more examples and detailed configuration options, see [📖 .github/README.md](.github/README.md).
+- [.github/README.md](.github/docs/README.md).
 
 ## 🤝 Contributing
 
