@@ -2,9 +2,13 @@
 
 A collection of reusable GitHub Actions workflows and custom actions for common development tasks and others.
 
-## 📋 Index
+## 📋 Documents
 
-- [.github/README.md](.github/docs/README.md).
+Please see the following documentation for detailed information about the files in this repo:
+
+| Documentation                                                            |
+| ------------------------------------------------------------------------ |
+| [🛠️ GitHub Actions & Development Infrastructure](.github/docs/README.md) |
 
 ## 🤝 Contributing
 
