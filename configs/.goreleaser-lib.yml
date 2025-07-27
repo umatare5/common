@@ -1,0 +1,91 @@
+# .goreleaser.yml for Go library package
+# Replace 'your-lib-name' with your actual library name
+
+project_name: your-lib-name
+version: 2
+
+# Build destination
+github_urls:
+  # set to true if you use a self-signed certificate
+  skip_tls_verify: false
+
+before:
+  hooks:
+    - go mod tidy
+    - go mod verify
+
+# No binary builds for a library package
+builds:
+  - skip: true
+
+# Create source archives for the library
+# Customize the 'files' section to include your library's specific files
+archives:
+  - id: source
+    name_template: '{{ .ProjectName }}-v{{ .Version }}_source'
+    formats: [ 'tar.gz' ]
+    files:
+      - "*.go"
+      - "*.md"
+      - "go.mod"
+      - "go.sum"
+      - "LICENSE"
+
+# Generate documentation
+dockers: []
+
+# Release configuration
+release:
+  prerelease: auto
+  draft: false
+  replace_existing_draft: true
+  header: |
+    ## {{ .ProjectName }} v{{ .Version }}
+
+    This release contains the Go library for your project.
+
+    ### Installation
+    ```bash
+    go get github.com/yourorg/{{ .ProjectName }}@v{{ .Version }}
+    ```
+
+    ### What's Changed
+  footer: |
+    **Full Changelog**: https://github.com/yourorg/{{ .ProjectName }}/compare/{{ .PreviousTag }}...{{ .Tag }}
+
+    ### Documentation
+    - [README](https://github.com/yourorg/{{ .ProjectName }}/blob/{{ .Tag }}/README.md)
+    - [API Reference](https://pkg.go.dev/github.com/yourorg/{{ .ProjectName }}@v{{ .Version }})
+
+# NOTE: Replace 'yourorg' with your actual GitHub organization/username
+
+# Generate checksums for source archives
+checksum:
+  name_template: "{{ .ProjectName }}-v{{ .Version }}_checksums.txt"
+
+# Changelog configuration
+changelog:
+  use: github
+  sort: asc
+  abbrev: 0
+  groups:
+    - title: Features
+      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
+      order: 0
+    - title: Bug fixes
+      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
+      order: 1
+    - title: Documentation updates
+      regexp: '^.*?docs(\([[:word:]]+\))??!?:.+$'
+      order: 2
+    - title: Other work
+      order: 999
+  filters:
+    exclude:
+      - '^test:'
+      - '^chore:'
+      - '^ci:'
+
+# Metadata for Go proxy and pkg.go.dev
+metadata:
+  mod_timestamp: '{{ .CommitTimestamp }}'
