@@ -18,7 +18,7 @@ jobs:
     name: Run golangci-lint
     runs-on: ubuntu-24.04
     steps:
-      - uses: umatare5/common/workflows/golangci-lint.yml@v0.1.0
+      - uses: umatare5/common/workflows/golangci-lint.yml@main
         with:
           go_version: "1.24.5"
           golangci_lint_version: "v1.64.8"
@@ -33,25 +33,9 @@ jobs:
 | `golangci_lint_version` | golangci-lint version to use   | `v1.64.8`       |
 | `golangci_lint_config`  | golangci-lint config file path | `.golangci.yml` |
 
-## 📝 Configuration
+## 📝 Prerequisites
 
-Create an optional `.golangci.yml` file in your repository root:
-
-```yaml
-run:
-  timeout: 5m
-
-linters:
-  enable:
-    - gofmt
-    - govet
-    - ineffassign
-    - misspell
-
-linters-settings:
-  gofmt:
-    simplify: true
-```
+Create an optional `.golangci.yml` file in your repository root.
 
 ## 🔧 Troubleshooting
 
