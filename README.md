@@ -1,26 +1,21 @@
 # umatare5/common
 
-A collection of reusable GitHub Actions workflows and custom actions for common development tasks and others.
+This repository provides reusable GitHub Actions workflows and custom actions for common development tasks and more.
 
-## 📁 Repository Structure
+## Directories
 
-Complete directory structure and file descriptions for this repository:
+The following directories are intended to be imported from other repositories:
 
-### 📂 Directories
+| Directory       | Description                                                                                     | Documentations                           |
+| --------------- | ----------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| `configs/`      | Configuration files for various tools used to scaffold a new repository.                        | N/A                                      |
+| `instructions/` | Instructions for GitHub Copilot Agent Mode. This is a symbolic link to `.github/instructions/`. | N/A                                      |
+| `workflows/`    | Reusable GitHub Actions workflows. This is a symbolic link to `.github/workflows/`.             | 📖 [Workflows](docs/workflows/README.md) |
 
-Please see the following documentation for detailed information about the files in this repository:
+## Acknowledgments
 
-| Directory             | Description                                                                                            |
-| --------------------- | ------------------------------------------------------------------------------------------------------ |
-| `.github/`            | [🛠️ GitHub Actions & Development Infrastructure](.github/docs/README.md)                               |
-| `.golangci.yml`       | Go language linting configuration file that defines behavior for `golangci-lint` static analysis tool. |
-| `.markdownlint.json`  | Markdown file quality check configuration that defines rules for document consistency and readability. |
-| `.markdownlintignore` | Specifies files and directories to ignore for Markdownlint tool, typically temporary report files.     |
+This code was developed with the assistance of **GitHub Copilot Agent Mode**. I'd like to express sincere gratitude to the global developer community for sharing their knowledge, code, and expertise through open source projects and public repositories.
 
-## 🙏 Acknowledgments
-
-This code was developed with the assistance of **GitHub Copilot Agent Mode**. I extend our heartfelt gratitude to the global developer community who have contributed their knowledge, code, and expertise to open source projects and public repositories.
-
-## 📄 License
+## License
 
 Please see the [LICENSE](./LICENSE) file for details.
