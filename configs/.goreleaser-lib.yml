@@ -49,11 +49,11 @@ release:
     go get github.com/yourorg/{{ .ProjectName }}@v{{ .Version }}
     ```
 
-    ### What's Changed
   footer: |
     **Full Changelog**: https://github.com/yourorg/{{ .ProjectName }}/compare/{{ .PreviousTag }}...{{ .Tag }}
 
     ### Documentation
+
     - [README](https://github.com/yourorg/{{ .ProjectName }}/blob/{{ .Tag }}/README.md)
     - [API Reference](https://pkg.go.dev/github.com/yourorg/{{ .ProjectName }}@v{{ .Version }})
 

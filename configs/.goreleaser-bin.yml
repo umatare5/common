@@ -120,6 +120,7 @@ release:
     This release contains the CLI for your application.
 
     ### 🐳 Container Images
+
     ```bash
     # Latest version
     docker run --rm ghcr.io/yourorg/your-cli-name:latest --help
@@ -128,10 +129,11 @@ release:
     docker run --rm ghcr.io/yourorg/your-cli-name:{{ .Tag }} command --help
 
     # With environment variables
-    docker run --rm -e YOUR_CLI_ENV="value" ghcr.io/yourorg/your-cli-name:{{ .Tag }} command
+    docker run --rm -e ENVVAR="value" ghcr.io/yourorg/your-cli-name:{{ .Tag }} command
     ```
 
     ### 📦 Binary Installation
+
     ```bash
     go install github.com/yourorg/your-cli-name@v{{ .Version }}
     ```
@@ -140,8 +142,8 @@ release:
     **Full Changelog**: https://github.com/yourorg/your-cli-name/compare/{{ .PreviousTag }}...{{ .Tag }}
 
     ### 📚 Documentation
+
     - [README](https://github.com/yourorg/your-cli-name/blob/{{ .Tag }}/README.md)
-    - [CLI Reference](https://github.com/yourorg/your-cli-name/blob/{{ .Tag }}/docs/CLI_REFERENCE.md)
     - [Container Registry](https://github.com/yourorg/your-cli-name/pkgs/container/your-cli-name)
 
 # Generate checksums for source archives
