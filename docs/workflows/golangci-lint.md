@@ -9,21 +9,20 @@ A reusable GitHub Actions workflow for automated Go code quality checks using go
 ```yaml
 name: Lint
 on: [pull_request]
+
+permissions:
+  contents: read
+
 jobs:
   lint:
-    uses: umatare5/common/.github/workflows/golangci-lint-action.yml@main
-```
-
-### With Custom Parameters
-
-```yaml
-jobs:
-  lint:
-    uses: umatare5/common/.github/workflows/golangci-lint-action.yml@main
-    with:
-      go_version: "1.24.5"
-      golangci_lint_version: "v1.64.8"
-      golangci_lint_config: ".golangci.yml"
+    name: Run golangci-lint
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: umatare5/common/workflows/golangci-lint.yml@v0.1.0
+        with:
+          go_version: "1.24.5"
+          golangci_lint_version: "v1.64.8"
+          golangci_lint_config: ".golangci.yml"
 ```
 
 ## ⚙️ Input Parameters
@@ -69,7 +68,7 @@ linters-settings:
 ```yaml
 jobs:
   lint:
-    uses: umatare5/common/.github/workflows/golangci-lint-action.yml@main
+    uses: umatare5/common/workflows/golangci-lint.yml@main
 
   test:
     needs: lint
@@ -90,7 +89,7 @@ jobs:
     strategy:
       matrix:
         go-version: ["1.23.0", "1.24.5"]
-    uses: umatare5/common/.github/workflows/golangci-lint-action.yml@main
+    uses: umatare5/common/workflows/golangci-lint.yml@main
     with:
       go_version: ${{ matrix.go-version }}
 ```

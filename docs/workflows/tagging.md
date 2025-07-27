@@ -43,7 +43,7 @@ on:
 
 jobs:
   tag:
-    uses: umatare5/common/.github/workflows/tagging-action.yml@main
+    uses: umatare5/common/workflows/tagging.yml@main
 ```
 
 ### Advanced Usage
@@ -60,7 +60,7 @@ on:
 
 jobs:
   tag:
-    uses: umatare5/common/.github/workflows/tagging-action.yml@main
+    uses: umatare5/common/workflows/tagging.yml@main
     with:
       version_file: "package.json"
       tag_prefix: "release-"
@@ -89,7 +89,7 @@ jobs:
 
 jobs:
   tag:
-    uses: umatare5/common/.github/workflows/tagging-action.yml@main
+    uses: umatare5/common/workflows/tagging.yml@main
 ```
 
 ### 2. Custom Version File
@@ -98,7 +98,7 @@ jobs:
 # For Node.js projects using package.json
 jobs:
   tag:
-    uses: umatare5/common/.github/workflows/tagging-action.yml@main
+    uses: umatare5/common/workflows/tagging.yml@main
     with:
       version_file: "package.json"
 ```
@@ -109,7 +109,7 @@ jobs:
 # Creates tags like: release-1.2.3
 jobs:
   tag:
-    uses: umatare5/common/.github/workflows/tagging-action.yml@main
+    uses: umatare5/common/workflows/tagging.yml@main
     with:
       tag_prefix: "release-"
 ```
@@ -120,7 +120,7 @@ jobs:
 # Creates tags like: 1.2.3 (no prefix)
 jobs:
   tag:
-    uses: umatare5/common/.github/workflows/tagging-action.yml@main
+    uses: umatare5/common/workflows/tagging.yml@main
     with:
       tag_prefix: ""
 ```
@@ -130,7 +130,7 @@ jobs:
 ```yaml
 jobs:
   tag:
-    uses: umatare5/common/.github/workflows/tagging-action.yml@main
+    uses: umatare5/common/workflows/tagging.yml@main
     with:
       git_user_name: "Release Manager"
       git_user_email: "release@company.com"
@@ -219,7 +219,7 @@ on:
 
 jobs:
   tag:
-    uses: umatare5/common/.github/workflows/tagging-action.yml@main
+    uses: umatare5/common/workflows/tagging.yml@main
 
   release:
     needs: tag
@@ -236,13 +236,13 @@ jobs:
 jobs:
   dev-tag:
     if: github.ref == 'refs/heads/develop'
-    uses: umatare5/common/.github/workflows/tagging-action.yml@main
+    uses: umatare5/common/workflows/tagging.yml@main
     with:
       tag_prefix: "dev-"
 
   prod-tag:
     if: github.ref == 'refs/heads/main'
-    uses: umatare5/common/.github/workflows/tagging-action.yml@main
+    uses: umatare5/common/workflows/tagging.yml@main
     with:
       tag_prefix: "v"
 ```
