@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   tag:
-    uses: umatare5/common/workflows/tagging.yml@main
+    uses: umatare5/common/.github/workflows/tagging.yml@main
     with:
       version_file: "VERSION"
       tag_prefix: "v"
@@ -50,7 +50,7 @@ Create a version file (default: `VERSION`) in your repository root with the vers
 ```yaml
 jobs:
   tag:
-    uses: umatare5/common/workflows/tagging.yml@main
+    uses: umatare5/common/.github/workflows/tagging.yml@main
     with:
       version_file: "package.json"
 ```
@@ -60,7 +60,7 @@ jobs:
 ```yaml
 jobs:
   tag:
-    uses: umatare5/common/workflows/tagging.yml@main
+    uses: umatare5/common/.github/workflows/tagging.yml@main
     with:
       tag_prefix: "release-"
 ```
@@ -70,7 +70,7 @@ jobs:
 ```yaml
 jobs:
   tag:
-    uses: umatare5/common/workflows/tagging.yml@main
+    uses: umatare5/common/.github/workflows/tagging.yml@main
     with:
       tag_prefix: ""
 ```

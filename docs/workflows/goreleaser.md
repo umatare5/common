@@ -18,7 +18,7 @@ permissions:
 
 jobs:
   release:
-    uses: umatare5/common/workflows/goreleaser.yml@main
+    uses: umatare5/common/.github/workflows/goreleaser.yml@main
     with:
       go_version: "1.24.5"
       setup_docker: true
@@ -50,7 +50,7 @@ Create an optional `.goreleaser.yml` file in your repository root.
 ```yaml
 jobs:
   release:
-    uses: umatare5/common/workflows/goreleaser.yml@main
+    uses: umatare5/common/.github/workflows/goreleaser.yml@main
     with:
       registry: "docker.io"
       # Additional authentication may be required for Docker Hub
@@ -61,7 +61,7 @@ jobs:
 ```yaml
 jobs:
   test-release:
-    uses: umatare5/common/workflows/goreleaser.yml@main
+    uses: umatare5/common/.github/workflows/goreleaser.yml@main
     with:
       goreleaser_args: "release --snapshot --clean --skip=publish"
       enable_docker: false
@@ -74,7 +74,7 @@ For detailed logs:
 ```yaml
 jobs:
   release:
-    uses: umatare5/common/workflows/goreleaser.yml@main
+    uses: umatare5/common/.github/workflows/goreleaser.yml@main
     with:
       goreleaser_args: "release --clean --debug"
 ```

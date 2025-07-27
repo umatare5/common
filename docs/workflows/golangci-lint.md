@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   lint:
-    uses: umatare5/common/workflows/golangci-lint.yml@main
+    uses: umatare5/common/.github/workflows/golangci-lint.yml@main
     with:
       go_version: "1.24.5"
       golangci_lint_version: "v1.64.8"
@@ -41,7 +41,7 @@ Create an optional `.golangci.yml` file in your repository root.
 ```yaml
 jobs:
   lint:
-    uses: umatare5/common/workflows/golangci-lint.yml@main
+    uses: umatare5/common/.github/workflows/golangci-lint.yml@main
 
   test:
     needs: lint
@@ -62,7 +62,7 @@ jobs:
     strategy:
       matrix:
         go-version: ["1.23.0", "1.24.5"]
-    uses: umatare5/common/workflows/golangci-lint.yml@main
+    uses: umatare5/common/.github/workflows/golangci-lint.yml@main
     with:
       go_version: ${{ matrix.go-version }}
 ```

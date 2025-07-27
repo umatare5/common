@@ -4,13 +4,13 @@ This repository provides reusable GitHub Actions workflows and custom actions fo
 
 ## Directories
 
-The following directories are intended to be imported from other repositories:
+The following directories are intended to be used from other repositories:
 
-| Directory               | Description                                                               | Documentations                                 |
-| ----------------------- | ------------------------------------------------------------------------- | ---------------------------------------------- |
-| `.github/workflows/`    | Reusable GitHub Actions workflows.                                        | 📖 [Workflows](docs/workflows/README.md)       |
-| `.github/instructions/` | Instructions for GitHub Copilot Agent Mode.                               | 📖 [Instructions](docs/instructions/README.md) |
-| `configs/`              | Configuration files for various tools used when scaffolding a repository. | 📖 [Configs](docs/configs/README.md)           |
+| Directory               | Description                                       | Documentations                                 |
+| ----------------------- | ------------------------------------------------- | ---------------------------------------------- |
+| `.github/workflows/`    | Reusable GitHub Actions workflows.                | 📖 [Workflows](docs/workflows/README.md)       |
+| `.github/instructions/` | Instructions for GitHub Copilot Agent Mode.       | 📖 [Instructions](docs/instructions/README.md) |
+| `configs/`              | Configs for tools used in repository scaffolding. | 📖 [Configs](docs/configs/README.md)           |
 
 ## Acknowledgments
 
