@@ -15,14 +15,11 @@ permissions:
 
 jobs:
   lint:
-    name: Run golangci-lint
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: umatare5/common/workflows/golangci-lint.yml@main
-        with:
-          go_version: "1.24.5"
-          golangci_lint_version: "v1.64.8"
-          golangci_lint_config: ".golangci.yml"
+    uses: umatare5/common/workflows/golangci-lint.yml@main
+    with:
+      go_version: "1.24.5"
+      golangci_lint_version: "v1.64.8"
+      golangci_lint_config: ".golangci.yml"
 ```
 
 ## ⚙️ Input Parameters
