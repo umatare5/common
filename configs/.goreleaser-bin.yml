@@ -28,7 +28,7 @@ builds:
       - darwin_arm64
       - windows_amd64
     ldflags:
-      - -X 'github.com/yourorg/your-cli-name/pkg/version.Version={{ .Version }}'
+      - -s -w -X 'github.com/yourorg/your-cli-name/pkg/version.Version={{ .Version }}'
 
 archives:
   - name_template: '{{ .ProjectName }}-v{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
@@ -59,12 +59,8 @@ dockers:
       - "--label=org.opencontainers.image.created={{ .Date }}"
       - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
       - "--label=org.opencontainers.image.licenses=MIT"
-    extra_files:
-      - go.mod
-      - go.sum
-      - cmd/
-      - internal/
-      - pkg/
+    ids:
+      - controld-exporter
     goarch: amd64
   - image_templates:
       - "ghcr.io/yourorg/your-cli-name:latest-arm64"
@@ -83,12 +79,8 @@ dockers:
       - "--label=org.opencontainers.image.created={{ .Date }}"
       - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
       - "--label=org.opencontainers.image.licenses=MIT"
-    extra_files:
-      - go.mod
-      - go.sum
-      - cmd/
-      - internal/
-      - pkg/
+    ids:
+      - controld-exporter
     goarch: arm64
 
 # Docker manifest for multi-platform images
@@ -126,7 +118,7 @@ release:
     docker run --rm ghcr.io/yourorg/your-cli-name:latest --help
 
     # Specific version
-    docker run --rm ghcr.io/yourorg/your-cli-name:{{ .Tag }} command --help
+    docker run --rm ghcr.io/yourorg/your-cli-name:{{ .Tag }} --help
 
     # With environment variables
     docker run --rm -e ENVVAR="value" ghcr.io/yourorg/your-cli-name:{{ .Tag }} command
