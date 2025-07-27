@@ -13,9 +13,8 @@ on:
     tags: ["v*"]
 
 permissions:
-  contents: write
+  contents: read
   packages: write
-  id-token: write
 
 jobs:
   release:

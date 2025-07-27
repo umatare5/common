@@ -37,17 +37,9 @@ jobs:
 
 Create an optional `.golangci.yml` file in your repository root.
 
-## 🔧 Troubleshooting
+## 📖 Advanced Usage
 
-**Go Module Issues**: Ensure your `go.mod` file is properly configured
-**Configuration Errors**: Check your `.golangci.yml` file syntax
-**Cache Issues**: The workflow automatically cleans caches
-
-- Ensure all dependencies in go.mod are accessible
-
-## Integration with CI/CD
-
-### Combined with Testing
+### 1. Combined with Testing
 
 ```yaml
 jobs:
@@ -65,7 +57,7 @@ jobs:
       - run: go test ./...
 ```
 
-### Matrix Strategy
+### 2. Matrix Strategy
 
 ```yaml
 jobs:
