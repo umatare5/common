@@ -1,6 +1,6 @@
 ---
 description: Go Large CLI Application Development Instructions
-applyTo: "cmd/*.go,internal/**/*.go,pkg/**/*.go"
+applyTo: "**/*.go"
 ---
 
 # GitHub Copilot Agent Mode – Go Large CLI Application Development Instructions
@@ -13,7 +13,7 @@ However, when there are conflicts between this document and `general.instruction
 
 ## 🎯 Primary Goal
 
-Develop and maintain a production-ready CLI application for managing Cisco C9800 WNC. **DO NOT** develop library/SDK code.
+Develop and maintain production-ready CLI applications with clean architecture and excellent user experience. Focus on building robust command-line tools that follow Go best practices.
 
 ---
 
@@ -34,7 +34,7 @@ Develop and maintain a production-ready CLI application for managing Cisco C9800
     ```plaintext
     +----------------------+    +----------------------+    +----------------------+    +---------------------+
     |        cli/          | -> |      framework/      | -> |     application/     | -> |   infrastructure/   |
-    |   (CLI & UI Layer)   |    |  (C9800 WNC Access)  |    |   (Business Logic)   |    |    (Data Access)    |
+    |   (CLI & UI Layer)   |    |  (Validation Layer)  |    |   (Business Logic)   |    |    (Data Access)    |
     +--------+-------------+    +--------+-------------+    +--------+-------------+    +--------+------------+
              |                           |                           |                           |
              v                           v                           v                           v
@@ -52,7 +52,7 @@ Develop and maintain a production-ready CLI application for managing Cisco C9800
   c := config.New()
   r := infrastructure.New(&c)
   u := application.New(&c, &r)
-  f := framework.NewShowCli(&c, &r, &u)
+  f := framework.NewCli(&c, &r, &u)
   ```
 
 - **Package-per-Command Structure:**
@@ -77,7 +77,7 @@ Develop and maintain a production-ready CLI application for managing Cisco C9800
           {
               Name:      "command-name",
               Usage:     "Brief description",
-              UsageText: "wnc command-name [options...]",
+              UsageText: "app command-name [options...]",
               Aliases:   []string{"alias"},
               Flags:     registerXxxCmdFlags(),
               Action:    commandAction,
@@ -91,9 +91,9 @@ Develop and maintain a production-ready CLI application for managing Cisco C9800
 
   ```go
   // Reusable flag patterns
-  flags = append(flags, registerControllersFlag()...)
+  flags = append(flags, registerTargetsFlag()...)
   flags = append(flags, registerInsecureFlag()...)
-  flags = append(flags, registerPrintFormatFlag()...)
+  flags = append(flags, registerOutputFormatFlag()...)
   ```
 
 - **Error Handling for CLI:**
@@ -123,9 +123,9 @@ Develop and maintain a production-ready CLI application for managing Cisco C9800
       c := config.New()
       r := infrastructure.New(&c)
       u := application.New(&c, &r)
-      f := framework.NewShowCli(&c, &r, &u)
+      f := framework.NewCli(&c, &r, &u)
 
-      c.SetShowCmdConfig(cmd)
+      c.SetCmdConfig(cmd)
       f.InvokeXxxCli().DoSomething()
       return nil
   }
@@ -144,7 +144,7 @@ Develop and maintain a production-ready CLI application for managing Cisco C9800
 - **Key Patterns:**
   ```go
   // Display logic with format support
-  if isJSONFormat(tc.Config.ShowCmdConfig.PrintFormat) {
+  if isJSONFormat(tc.Config.CmdConfig.OutputFormat) {
       tc.renderAsJSON(data)
   } else {
       tc.renderAsTable(data)
@@ -164,17 +164,17 @@ Develop and maintain a production-ready CLI application for managing Cisco C9800
 
 - **Purpose:** Handle external API calls and data access
 - **Responsibilities:**
-  - Create and manage WNC clients
-  - Handle API authentication
+  - Create and manage HTTP/API clients
+  - Handle authentication and authorization
   - Process API responses
-  - Log API-related errors
+  - Log communication-related errors
 
 ### Configuration Layer (`internal/config/`)
 
 - **Purpose:** Manage application configuration
 - **Responsibilities:**
   - Parse and validate CLI flags
-  - Manage controller configurations
+  - Manage target service configurations
   - Handle environment variables
   - Validate user inputs
 
@@ -189,11 +189,11 @@ Develop and maintain a production-ready CLI application for managing Cisco C9800
   - Use appropriate exit codes
   - Support common shell conventions
 
-- **Multiple Controller Support:**
+- **Multiple Target Support:**
 
-  - Handle multiple controllers gracefully
-  - Continue processing if one controller fails
-  - Clearly indicate which controller data comes from
+  - Handle multiple targets/services gracefully
+  - Continue processing if one target fails
+  - Clearly indicate which target data comes from
 
 - **Error Messages:**
 
@@ -214,19 +214,19 @@ Develop and maintain a production-ready CLI application for managing Cisco C9800
 
   ```go
   // Validate flags before processing
-  func (c *Config) validateShowCmdFlags(cli *cli.Command) error {
-      if err := c.validateControllersFormat(cli.String(ControllersFlagName)); err != nil {
+  func (c *Config) validateCmdFlags(cli *cli.Command) error {
+      if err := c.validateTargetsFormat(cli.String(TargetsFlagName)); err != nil {
           log.Fatal(err)
       }
       return nil
   }
   ```
 
-- **Controller Format:**
-  Support flexible controller specification: `https://wnc1.example.com:token,wnc2.example.com:token`
+- **Target Format:**
+  Support flexible target specification: `https://api1.example.com:token,api2.example.com:token`
 
 - **Environment Variable Support:**
-  Use `cli.EnvVars("WNC_CONTROLLERS")` for common flags to support automation
+  Use `cli.EnvVars("APP_TARGETS")` for common flags to support automation
 
 ---
 
@@ -246,8 +246,8 @@ Develop and maintain a production-ready CLI application for managing Cisco C9800
   - Support programmatic processing
 
 - **Data Conversion:**
-  - Convert YANG model enums to human-readable strings
-  - Reference official Cisco YANG models in comments
+  - Convert API enums to human-readable strings
+  - Reference official API documentation in comments
   - Handle missing or null data gracefully
 
 ---
@@ -256,9 +256,9 @@ Develop and maintain a production-ready CLI application for managing Cisco C9800
 
 - **Integration Testing:**
 
-  - Test with real WNC controllers when possible
+  - Test with real API endpoints when possible
   - Use environment variables for test configuration
-  - Skip integration tests if controllers are unavailable
+  - Skip integration tests if services are unavailable
 
 - **Flag Testing:**
 
@@ -275,9 +275,9 @@ Develop and maintain a production-ready CLI application for managing Cisco C9800
 
 ## 📊 Performance Considerations
 
-- **Concurrent Controller Access:**
+- **Concurrent Target Access:**
 
-  - Process multiple controllers concurrently when beneficial
+  - Process multiple targets concurrently when beneficial
   - Handle timeouts gracefully
   - Implement proper context cancellation
 
@@ -305,7 +305,7 @@ Develop and maintain a production-ready CLI application for managing Cisco C9800
 - **Network Security:**
   - Default to secure connections
   - Provide `--insecure` flag only when necessary
-  - Validate controller hostnames
+  - Validate target hostnames and certificates
 
 ---
 
@@ -319,14 +319,14 @@ Develop and maintain a production-ready CLI application for managing Cisco C9800
 
 - **Code Comments:**
 
-  - Reference Cisco YANG models for data conversions
+  - Reference API documentation for data conversions
   - Document complex business logic
   - Explain non-obvious CLI patterns
 
 - **Error Documentation:**
   - Document common error scenarios
   - Provide resolution steps
-  - Link to relevant Cisco documentation
+  - Link to relevant API documentation
 
 ---
 
@@ -351,7 +351,7 @@ When adding new commands:
   Follow existing patterns and conventions throughout the codebase
 
 - **Error Resilience:**
-  Handle partial failures gracefully, especially with multiple controllers
+  Handle partial failures gracefully, especially with multiple targets
 
 - **User Feedback:**
   Provide progress indicators for long-running operations
@@ -379,48 +379,46 @@ pkg/
 │   └── logger.go
 ├── tablewriter/         # Wraps github.com/olekukonko/tablewriter
 │   └── tablewriter.go
-└── cisco/              # Wraps github.com/umatare5/cisco-ios-xe-wireless-go
-    ├── client.go       # Client creation and management
-    ├── ap.go           # Access Point operations
-    ├── client.go       # Client operations
-    ├── wlan.go         # WLAN operations
-    └── types.go        # Common types and structures
+└── client/              # Wraps HTTP/API client libraries
+    ├── client.go        # Client creation and management
+    ├── auth.go          # Authentication operations
+    ├── request.go       # Request handling
+    └── types.go         # Common types and structures
 ```
 
 #### Implementation Pattern:
 
 ```go
-// pkg/cisco/ap.go
-package cisco
+// pkg/client/api.go
+package client
 
 import (
     "context"
-    "github.com/umatare5/cisco-ios-xe-wireless-go/ap"
-    wnc "github.com/umatare5/cisco-ios-xe-wireless-go"
+    "net/http"
 )
 
-// GetAccessPointCapwapData wraps the external library call
-func GetAccessPointCapwapData(client *wnc.Client, ctx context.Context) (*ap.ApOperCapwapDataResponse, error) {
-    return ap.GetApCapwapData(client, ctx)
+// GetData wraps the external library call
+func GetData(client *http.Client, ctx context.Context, endpoint string) (*ApiResponse, error) {
+    return makeAPICall(client, ctx, endpoint)
 }
 ```
 
 #### Usage in Infrastructure Layer:
 
 ```go
-// internal/infrastructure/ap.go
+// internal/infrastructure/api.go
 import (
-    "github.com/umatare5/wnc/pkg/cisco"  // ✅ Correct: Use pkg wrapper
-    // "github.com/umatare5/cisco-ios-xe-wireless-go/ap"  // ❌ Wrong: Direct import
+    "github.com/yourorg/yourapp/pkg/client"  // ✅ Correct: Use pkg wrapper
+    // "some/external/api/library"  // ❌ Wrong: Direct import
 )
 
-func (r *ApRepository) GetApCapwapData(controller, apikey string, isSecure *bool) *ap.ApOperCapwapDataResponse {
-    client, err := cisco.NewClient(controller, apikey, isSecure)
+func (r *ApiRepository) GetData(endpoint, apikey string, isSecure *bool) *ApiResponse {
+    client, err := client.NewClient(endpoint, apikey, isSecure)
     if err != nil {
         return nil
     }
 
-    return cisco.GetAccessPointCapwapData(client, context.Background())
+    return client.GetData(client, context.Background(), endpoint)
 }
 ```
 
@@ -429,7 +427,7 @@ func (r *ApRepository) GetApCapwapData(controller, apikey string, isSecure *bool
 1. **Standard library**: Direct imports allowed everywhere
 2. **Internal packages**: Use relative imports within the project
 3. **Third-party libraries**: MUST go through `pkg/` wrapper layer
-4. **Cisco library**: MUST use `pkg/cisco/` wrapper functions
+4. **API/HTTP libraries**: MUST use `pkg/client/` wrapper functions
 
 ### Dependency Flow
 
