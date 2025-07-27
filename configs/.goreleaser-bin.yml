@@ -1,4 +1,4 @@
- # .goreleaser.yml for CLI application package
+# .goreleaser.yml for CLI application package
 # Replace 'your-cli-name' with your actual CLI application name
 
 project_name: your-cli-name
