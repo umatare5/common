@@ -21,19 +21,18 @@ jobs:
   tag:
     uses: umatare5/common/.github/workflows/tagging.yml@main
     with:
-      version_file: "VERSION"
-      tag_prefix: "v"
+      runs_on: "ubuntu-24.04"
 ```
 
 ## ⚙️ Input Parameters
 
-| Parameter        | Description                | Default                                        |
-| ---------------- | -------------------------- | ---------------------------------------------- |
-| `version_file`   | Path to the version file   | `VERSION`                                      |
-| `tag_prefix`     | Prefix for the git tag     | `v`                                            |
-| `runs_on`        | Runner to use for the job  | `ubuntu-24.04`                                 |
-| `git_user_name`  | Git user name for commits  | `github-actions[bot]`                          |
-| `git_user_email` | Git user email for commits | `github-actions[bot]@users.noreply.github.com` |
+| Parameter        | Type   | Description                | Default                                        |
+| ---------------- | ------ | -------------------------- | ---------------------------------------------- |
+| `version_file`   | string | Path to the version file   | `VERSION`                                      |
+| `tag_prefix`     | string | Prefix for the git tag     | `v`                                            |
+| `runs_on`        | string | Runner to use for the job  | `ubuntu-24.04`                                 |
+| `git_user_name`  | string | Git user name for commits  | `github-actions[bot]`                          |
+| `git_user_email` | string | Git user email for commits | `github-actions[bot]@users.noreply.github.com` |
 
 ## 📋 Prerequisites
 
@@ -45,14 +44,15 @@ Create a version file (default: `VERSION`) in your repository root with the vers
 
 ## 📖 Advanced Usage
 
-### 1. Custom Version File
+### 1. Custom Version File Location
 
 ```yaml
 jobs:
   tag:
     uses: umatare5/common/.github/workflows/tagging.yml@main
     with:
-      version_file: "package.json"
+      version_file: "src/version.txt"
+      tag_prefix: "v"
 ```
 
 ### 2. Custom Tag Prefix

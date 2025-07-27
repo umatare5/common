@@ -13,31 +13,31 @@ on:
     tags: ["v*"]
 
 permissions:
-  contents: read
-  packages: write
+  contents: write # For creating releases
+  packages: write # For pushing to ghcr.io
+  id-token: write # For OIDC authentication
 
 jobs:
   release:
     uses: umatare5/common/.github/workflows/goreleaser.yml@main
     with:
+      runs_on: "ubuntu-24.04"
       go_version: "1.24.5"
-      setup_docker: true
-      registry_login: true
-    secrets:
-      registry_username: ${{ secrets.DOCKER_USERNAME }}
-      registry_password: ${{ secrets.DOCKER_PASSWORD }}
+      goreleaser_version: "v2.11.1"
 ```
 
 ## ⚙️ Input Parameters
 
-| Parameter            | Description                     | Default           |
-| -------------------- | ------------------------------- | ----------------- |
-| `go_version`         | Go version to use               | `1.24.5`          |
-| `goreleaser_version` | GoReleaser version to use       | `latest`          |
-| `goreleaser_args`    | Arguments to pass to GoReleaser | `release --clean` |
-| `runs_on`            | Runner to use for the job       | `ubuntu-24.04`    |
-| `setup_docker`       | Enable Docker Buildx setup      | `true`            |
-| `registry_login`     | Enable container registry login | `false`           |
+| Parameter                 | Type    | Description                                  | Default           |
+| ------------------------- | ------- | -------------------------------------------- | ----------------- |
+| `go_version`              | string  | Go version to use                            | `1.24.5`          |
+| `goreleaser_version`      | string  | GoReleaser version to use                    | `latest`          |
+| `goreleaser_args`         | string  | Arguments to pass to GoReleaser              | `release --clean` |
+| `runs_on`                 | string  | Runner to use for the job                    | `ubuntu-24.04`    |
+| `fetch_depth`             | number  | Number of commits to fetch (0 = all history) | `0`               |
+| `enable_docker`           | boolean | Enable Docker Buildx setup                   | `true`            |
+| `registry`                | string  | Container registry to use                    | `ghcr.io`         |
+| `goreleaser_distribution` | string  | GoReleaser distribution                      | `goreleaser`      |
 
 ## 📋 Prerequisites
 
@@ -45,15 +45,16 @@ Create an optional `.goreleaser.yml` file in your repository root.
 
 ## 📖 Advanced Usage
 
-### 1. Using Different Container Registry
+### 1. Performance Optimization
 
 ```yaml
 jobs:
   release:
     uses: umatare5/common/.github/workflows/goreleaser.yml@main
     with:
-      registry: "docker.io"
-      # Additional authentication may be required for Docker Hub
+      runs_on: "ubuntu-latest"
+      fetch_depth: 0 # Full history for complete release information
+      goreleaser_args: "release --clean --parallelism=4"
 ```
 
 ### 2. Development Testing
@@ -68,8 +69,6 @@ jobs:
 ```
 
 ### 3. Debug Mode
-
-For detailed logs:
 
 ```yaml
 jobs:
