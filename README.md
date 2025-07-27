@@ -2,17 +2,20 @@
 
 A collection of reusable GitHub Actions workflows and custom actions for common development tasks and others.
 
-## 📋 Documents
+## 📁 Repository Structure
 
-Please see the following documentation for detailed information about the files in this repo:
+Complete directory structure and file descriptions for this repository:
 
-| Documentation                                                            |
-| ------------------------------------------------------------------------ |
-| [🛠️ GitHub Actions & Development Infrastructure](.github/docs/README.md) |
+### 📂 Directories
 
-## 🤝 Contributing
+Please see the following documentation for detailed information about the files in this repository:
 
-Feel free to submit issues and enhancement requests. These workflows are designed to be flexible and reusable across different Go projects.
+| Directory             | Description                                                                                            |
+| --------------------- | ------------------------------------------------------------------------------------------------------ |
+| `.github/`            | [🛠️ GitHub Actions & Development Infrastructure](.github/docs/README.md)                               |
+| `.golangci.yml`       | Go language linting configuration file that defines behavior for `golangci-lint` static analysis tool. |
+| `.markdownlint.json`  | Markdown file quality check configuration that defines rules for document consistency and readability. |
+| `.markdownlintignore` | Specifies files and directories to ignore for Markdownlint tool, typically temporary report files.     |
 
 ## 🙏 Acknowledgments
 
