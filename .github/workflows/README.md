@@ -12,18 +12,18 @@ name: Lint
 on: [pull_request]
 jobs:
   lint:
-    uses: umatare5/workflows/golangci-lint.yml@main
+    uses: umatare5/common/.github/workflows/golangci-lint.yml@main
     with:
       go_version: "1.24.5"
 ```
 
 ## Available Workflows
 
-| Workflow                                                  | Description                                   | Documentation                  |
-| --------------------------------------------------------- | --------------------------------------------- | ------------------------------ |
-| [`golangci-lint.yml`](./docs/workflows/golangci-lint.yml) | Go code quality checks with golangci-lint     | [📖 Guide](./golangci-lint.md) |
-| [`goreleaser.yml`](./docs/workflows/goreleaser.yml)       | Automated Go project releases with GoReleaser | [📖 Guide](./goreleaser.md)    |
-| [`tagging.yml`](./docs/workflows/tagging.yml)             | Automated Git tag creation from version files | [📖 Guide](./tagging.md)       |
+| Workflow                                   | Description                                   | Documentation                       |
+| ------------------------------------------ | --------------------------------------------- | ----------------------------------- |
+| [`golangci-lint.yml`](./golangci-lint.yml) | Go code quality checks with golangci-lint     | [📖 Guide](./docs/golangci-lint.md) |
+| [`goreleaser.yml`](./goreleaser.yml)       | Automated Go project releases with GoReleaser | [📖 Guide](./docs/goreleaser.md)    |
+| [`tagging.yml`](./tagging.yml)             | Automated Git tag creation from version files | [📖 Guide](./docs/tagging.md)       |
 
 > [!Note]
 >
