@@ -9,7 +9,7 @@ This repository is the central hub for reusable GitHub Actions workflows, custom
 
 The following directories are intended to be used from other repositories:
 
-| Directory               | Description                                       | Documentations                                 |
+| Directory               | Description                                       | Documentation                                  |
 | ----------------------- | ------------------------------------------------- | ---------------------------------------------- |
 | `.github/workflows/`    | Reusable GitHub Actions workflows.                | 📖 [README.md](.github/workflows/README.md)    |
 | `.github/instructions/` | Instructions for GitHub Copilot Agent Mode.       | 📖 [README.md](.github/instructions/README.md) |
