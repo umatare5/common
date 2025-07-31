@@ -5,7 +5,6 @@
   "automerge": true,
   "platformAutomerge": true,
   "labels": ["Type: Dependencies"],
-  "schedule": ["0 9 * * 6"],
   "packageRules": [
     {
       "matchUpdateTypes": ["major"],
