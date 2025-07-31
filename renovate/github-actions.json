@@ -1,0 +1,9 @@
+{
+  "packageRules": [
+    {
+      "matchManagers": ["github-actions"],
+      "labels": ["Type: CI"],
+      "pinDigests": true
+    }
+  ]
+}
