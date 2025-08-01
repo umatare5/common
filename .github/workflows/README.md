@@ -21,6 +21,7 @@ jobs:
 
 | Workflow                                   | Description                                   | Documentation                       |
 | ------------------------------------------ | --------------------------------------------- | ----------------------------------- |
+| [`go-test.yml`](./go-test.yml)             | Go testing, coverage checks, and binary build | [📖 Guide](./docs/go-test.md)       |
 | [`golangci-lint.yml`](./golangci-lint.yml) | Go code quality checks with golangci-lint     | [📖 Guide](./docs/golangci-lint.md) |
 | [`goreleaser.yml`](./goreleaser.yml)       | Automated Go project releases with GoReleaser | [📖 Guide](./docs/goreleaser.md)    |
 | [`tagging.yml`](./tagging.yml)             | Automated Git tag creation from version files | [📖 Guide](./docs/tagging.md)       |
