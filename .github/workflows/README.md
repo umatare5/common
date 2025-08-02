@@ -12,7 +12,7 @@ name: Lint
 on: [pull_request]
 jobs:
   lint:
-    uses: umatare5/common/.github/workflows/golangci-lint.yml@main
+    uses: umatare5/common/.github/workflows/go-test-fmt.yml@main
     with:
       go_version: "1.24.5"
 ```
