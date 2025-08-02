@@ -8,7 +8,11 @@ A reusable GitHub Actions workflow for automated Go testing and binary build ver
 
 ```yaml
 name: Test and Build
-on: [push, pull_request]
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
 permissions:
   contents: read

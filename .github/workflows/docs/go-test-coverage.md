@@ -8,7 +8,11 @@ A reusable GitHub Actions workflow for automated Go coverage testing with config
 
 ```yaml
 name: Coverage
-on: [push, pull_request]
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
 permissions:
   contents: read

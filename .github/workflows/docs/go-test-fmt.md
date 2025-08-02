@@ -8,7 +8,11 @@ A reusable GitHub Actions workflow for automated Go code formatting and quality 
 
 ```yaml
 name: Format and Lint
-on: [pull_request]
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
 permissions:
   contents: read
