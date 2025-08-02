@@ -9,19 +9,16 @@
     {
       "matchUpdateTypes": ["major"],
       "automerge": false,
-      "groupName": "Major updates",
       "labels": ["Update: Major"]
     },
     {
       "matchUpdateTypes": ["minor"],
       "automerge": true,
-      "groupName": "Minor updates",
       "labels": ["Update: Minor"]
     },
     {
       "matchUpdateTypes": ["patch"],
       "automerge": true,
-      "groupName": "Patch updates",
       "labels": ["Update: Patch"]
     }
   ]
