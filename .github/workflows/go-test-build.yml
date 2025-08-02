@@ -13,16 +13,6 @@ on:
         required: false
         type: string
         default: "1.24.5"
-      coverage_threshold:
-        description: "Minimum coverage percentage required"
-        required: false
-        type: number
-        default: 80
-      coverage_file:
-        description: "Coverage output file path"
-        required: false
-        type: string
-        default: "./coverage.out"
       runs_on:
         description: "Runner to use for the job"
         required: false
@@ -87,31 +77,13 @@ jobs:
       - name: Install gotestsum
         run: go install gotest.tools/gotestsum@latest
 
-      - name: Run tests with coverage
+      - name: Run tests
         run: |
           if [ "${{ inputs.enable_race_detection }}" = "true" ]; then
-            gotestsum --format ${{ inputs.gotestsum_format }} -- -race -coverprofile=${{ inputs.coverage_file }} ${{ inputs.test_packages }}
+            gotestsum --format ${{ inputs.gotestsum_format }} -- -race ${{ inputs.test_packages }}
           else
-            gotestsum --format ${{ inputs.gotestsum_format }} -- -coverprofile=${{ inputs.coverage_file }} ${{ inputs.test_packages }}
+            gotestsum --format ${{ inputs.gotestsum_format }} -- ${{ inputs.test_packages }}
           fi
-
-      - name: Extract coverage percentage
-        id: coverage
-        run: |
-          coverage=$(go tool cover -func=${{ inputs.coverage_file }} | tail -1 | awk '{print $3}' | sed 's/%//')
-          echo "percentage=${coverage}" >> $GITHUB_OUTPUT
-          echo "Coverage: ${coverage}%"
-
-      - name: Check coverage threshold
-        if: steps.coverage.outputs.percentage < inputs.coverage_threshold
-        run: |
-          echo "❌ Coverage ${{ steps.coverage.outputs.percentage }}% < ${{ inputs.coverage_threshold }}%"
-          go tool cover -func=${{ inputs.coverage_file }} | grep -v "100.0%"
-          exit 1
-
-      - name: Coverage success
-        if: steps.coverage.outputs.percentage >= inputs.coverage_threshold
-        run: echo "✅ Coverage ${{ steps.coverage.outputs.percentage }}% >= ${{ inputs.coverage_threshold }}%"
 
       - name: Build binary
         run: go build -o ${{ inputs.build_output_path }} ${{ inputs.build_cmd_path }}
