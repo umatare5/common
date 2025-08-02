@@ -55,20 +55,24 @@ jobs:
     name: Go Release
     runs-on: ${{ inputs.runs_on }}
     steps:
+      # Checkout the code repository with full git history for release tagging
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: ${{ inputs.fetch_depth }}
 
+      # Set up Go development environment for building release binaries
       - name: Set up Go
         uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
         with:
           go-version: ${{ inputs.go_version }}
 
+      # Set up Docker Buildx for multi-platform container image builds
       - name: Set up Docker Buildx
         if: ${{ inputs.enable_docker }}
         uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
 
+      # Authenticate with container registry for pushing Docker images
       - name: Login to Container Registry
         if: ${{ inputs.enable_docker }}
         uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3.4.0
@@ -77,6 +81,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # Execute GoReleaser to build, package, and publish release artifacts
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@9c156ee8a17a598857849441385a2041ef570552 # v6.3.0
         with:

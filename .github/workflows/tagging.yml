@@ -34,9 +34,11 @@ jobs:
     runs-on: ${{ inputs.runs_on }}
 
     steps:
+      # Checkout the code repository to access version files and git history
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
+      # Read version information from specified file for tag creation
       - name: Read VERSION file
         id: read_version
         run: |
@@ -49,6 +51,7 @@ jobs:
             exit 1
           fi
 
+      # Configure git user settings and create annotated tag based on version file
       - name: Create and push tag
         env:
           VERSION: ${{ env.VERSION }}
