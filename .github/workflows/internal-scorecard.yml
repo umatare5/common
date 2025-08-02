@@ -1,0 +1,19 @@
+name: Internal OSSF Scorecard
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  schedule:
+    # Run weekly on Sundays at 12:00 UTC
+    - cron: "0 12 * * 0"
+
+permissions:
+  contents: read # For checking out code
+  security-events: write # For uploading SARIF results to code-scanning dashboard
+  id-token: write # For publishing results and getting a badge (only on default branch)
+
+jobs:
+  scorecard:
+    uses: ./.github/workflows/scorecard.yml
