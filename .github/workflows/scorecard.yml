@@ -1,71 +1,23 @@
-name: Reusable OSSF Scorecard Workflow
-
-# Required permissions for calling workflow:
-# permissions:
-#   contents: read        # For checking out code
-#   security-events: write # For uploading SARIF results to code-scanning dashboard
-#   id-token: write       # For publishing results and getting a badge (only on default branch)
-
-# Note: The publish_results feature only works on the default branch.
-# Ensure the calling workflow handles branch restrictions if needed.
+name: Internal OSSF Scorecard
 
 on:
-  workflow_call:
-    inputs:
-      runs_on:
-        description: "Runner to use for the job"
-        required: false
-        type: string
-        default: "ubuntu-latest"
-      fetch_depth:
-        description: "Number of commits to fetch (0 = all history)"
-        required: false
-        type: number
-        default: 1
-      results_file:
-        description: "Output file for Scorecard results"
-        required: false
-        type: string
-        default: "results.sarif"
-      results_format:
-        description: "Format for Scorecard results"
-        required: false
-        type: string
-        default: "sarif"
-      publish_results:
-        description: "Publish results to OpenSSF REST API (only works on default branch)"
-        required: false
-        type: boolean
-        default: true
-      upload_artifacts:
-        description: "Upload results as artifacts"
-        required: false
-        type: boolean
-        default: true
-      upload_to_code_scanning:
-        description: "Upload results to GitHub's code scanning dashboard"
-        required: false
-        type: boolean
-        default: true
-      artifact_name:
-        description: "Name for the uploaded artifact"
-        required: false
-        type: string
-        default: "SARIF file"
-      artifact_retention_days:
-        description: "Retention days for uploaded artifacts"
-        required: false
-        type: number
-        default: 5
-    secrets:
-      scorecard_token:
-        description: "PAT token for private repositories or enhanced Branch-Protection checks"
-        required: false
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  schedule:
+    # Run weekly on Sundays at 12:00 UTC
+    - cron: "0 12 * * 0"
+
+permissions:
+  contents: read # For checking out code
+  security-events: write # For uploading SARIF results to code-scanning dashboard
+  id-token: write # For publishing results and getting a badge (only on default branch)
 
 jobs:
   scorecard_analysis:
     name: OSSF Scorecard Analysis
-    runs-on: ${{ inputs.runs_on }}
+    runs-on: ubuntu-latest
 
     steps:
       # Checkout the code repository to access source files for analysis
@@ -73,31 +25,27 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
-          fetch-depth: ${{ inputs.fetch_depth }}
+          fetch-depth: 1
 
       # Run OSSF Scorecard analysis to evaluate security practices
       - name: Run OSSF Scorecard analysis
         uses: ossf/scorecard-action@f49aabe0b5af0936a0987cfb85d86b75731b0186 # v2.4.1
         with:
-          results_file: ${{ inputs.results_file }}
-          results_format: ${{ inputs.results_format }}
-          # Use repo_token for private repositories or enhanced Branch-Protection checks
-          repo_token: ${{ secrets.scorecard_token }}
+          results_file: results.sarif
+          results_format: sarif
           # Publish results to OpenSSF REST API (only works on default branch)
-          publish_results: ${{ inputs.publish_results && github.event.repository.default_branch == github.ref_name }}
+          publish_results: ${{ github.event.repository.default_branch == github.ref_name }}
 
       # Upload the results as artifacts for later access and review
       - name: Upload Scorecard results artifact
-        if: ${{ inputs.upload_artifacts }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: ${{ inputs.artifact_name }}
-          path: ${{ inputs.results_file }}
-          retention-days: ${{ inputs.artifact_retention_days }}
+          name: SARIF file
+          path: results.sarif
+          retention-days: 5
 
       # Upload the results to GitHub's code scanning dashboard for security insights
       - name: Upload to code scanning dashboard
-        if: ${{ inputs.upload_to_code_scanning }}
         uses: github/codeql-action/upload-sarif@51f77329afa6477de8c49fc9c7046c15b9a4e79d # v3
         with:
-          sarif_file: ${{ inputs.results_file }}
+          sarif_file: results.sarif
