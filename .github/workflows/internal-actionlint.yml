@@ -6,11 +6,9 @@ on:
   push:
     paths:
       - ".github/workflows/**"
-      - ".github/actions/**"
   pull_request:
     paths:
       - ".github/workflows/**"
-      - ".github/actions/**"
 
 jobs:
   actionlint:
