@@ -11,10 +11,10 @@ on:
   workflow_call:
     inputs:
       languages:
-        description: 'Languages to analyze as JSON array (e.g., ''["javascript", "python"]'')'
+        description: 'Languages to analyze as JSON array (e.g., ''["go"]'')'
         required: false
         type: string
-        default: '["javascript", "python"]'
+        default: '["go"]'
       runs_on:
         description: "Runner to use for the job"
         required: false
