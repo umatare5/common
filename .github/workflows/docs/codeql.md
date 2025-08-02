@@ -20,42 +20,42 @@ jobs:
   codeql:
     uses: umatare5/common/.github/workflows/codeql.yml@main
     with:
-      languages: "actions,go"
+      languages: '["javascript", "python"]'
       runs_on: "ubuntu-latest"
 ```
 
 ## ⚙️ Input Parameters
 
-| Parameter        | Type   | Description                                                                   | Default         |
-| ---------------- | ------ | ----------------------------------------------------------------------------- | --------------- |
-| `languages`      | string | Languages to analyze (comma-separated: actions,go,javascript-typescript,etc.) | `actions,go`    |
-| `runs_on`        | string | Runner to use for the job                                                     | `ubuntu-latest` |
-| `fetch_depth`    | number | Number of commits to fetch (0 = all history)                                  | `1`             |
-| `codeql_queries` | string | Custom CodeQL queries (e.g., security-extended,security-and-quality)          | `""`            |
-| `build_commands` | string | Custom build commands for manual build mode (multiline string)                | `""`            |
+| Parameter       | Type   | Description                                  | Default                       |
+| --------------- | ------ | -------------------------------------------- | ----------------------------- |
+| `languages`     | string | Languages to analyze as JSON array           | `'["javascript", "python"]'`  |
+| `runs_on`       | string | Runner to use for the job                    | `ubuntu-latest`               |
+| `fetch_depth`   | number | Number of commits to fetch (0 = all history) | `1`                           |
+| `codeql_config` | string | Path to CodeQL configuration file            | `./.github/codeql-config.yml` |
 
 ## 🔍 Supported Languages
 
-CodeQL supports the following languages with their respective build modes:
+CodeQL supports analysis for the following languages:
 
-| Language                | Build Mode  | Description                         |
-| ----------------------- | ----------- | ----------------------------------- |
-| `actions`               | `none`      | GitHub Actions workflows            |
-| `javascript-typescript` | `none`      | JavaScript and TypeScript           |
-| `python`                | `none`      | Python                              |
-| `ruby`                  | `none`      | Ruby                                |
-| `go`                    | `autobuild` | Go (automatically built)            |
-| `java-kotlin`           | `autobuild` | Java and Kotlin                     |
-| `csharp`                | `autobuild` | C#                                  |
-| `rust`                  | `autobuild` | Rust                                |
-| `c-cpp`                 | `manual`    | C and C++ (requires build commands) |
-| `swift`                 | `manual`    | Swift (runs on macOS)               |
+| Language      | Description     |
+| ------------- | --------------- |
+| `javascript`  | JavaScript      |
+| `python`      | Python          |
+| `cpp`         | C and C++       |
+| `java-kotlin` | Java and Kotlin |
+| `csharp`      | C#              |
+| `go`          | Go              |
+| `ruby`        | Ruby            |
+| `rust`        | Rust            |
+| `swift`       | Swift           |
+
+**Note:** Languages are specified as a JSON array in the `languages` parameter.
 
 ## 📝 Prerequisites
 
 - Repository with source code in supported languages
-- For manual build languages (C/C++, Swift), provide custom build commands
 - Appropriate permissions configured for security events
+- Optional: Create `.github/codeql-config.yml` for advanced configuration
 
 ## 📖 Advanced Usage
 
@@ -66,33 +66,28 @@ jobs:
   codeql:
     uses: umatare5/common/.github/workflows/codeql.yml@main
     with:
-      languages: "actions,go,javascript-typescript,python"
-      codeql_queries: "security-extended,security-and-quality"
+      languages: '["javascript", "python", "go"]'
 ```
 
-### 2. Custom Build Commands for Manual Build
+### 2. Custom Configuration File
 
 ```yaml
 jobs:
   codeql:
     uses: umatare5/common/.github/workflows/codeql.yml@main
     with:
-      languages: "c-cpp"
-      build_commands: |
-        make clean
-        make bootstrap
-        make release
+      languages: '["javascript", "python"]'
+      codeql_config: "./.github/custom-codeql-config.yml"
 ```
 
-### 3. Extended Security Analysis
+### 3. Full History Analysis
 
 ```yaml
 jobs:
   codeql:
     uses: umatare5/common/.github/workflows/codeql.yml@main
     with:
-      languages: "go,javascript-typescript"
-      codeql_queries: "security-extended,security-and-quality"
+      languages: '["javascript", "python", "go"]'
       fetch_depth: 0 # Full history for better analysis
 ```
 
@@ -103,7 +98,7 @@ jobs:
   codeql:
     uses: umatare5/common/.github/workflows/codeql.yml@main
     with:
-      languages: "go"
+      languages: '["javascript"]'
       runs_on: "ubuntu-latest-4-cores" # Use larger runner for faster analysis
 ```
 
@@ -119,17 +114,31 @@ jobs:
   codeql:
     uses: umatare5/common/.github/workflows/codeql.yml@main
     with:
-      languages: "actions,go"
-      codeql_queries: "security-extended,security-and-quality"
+      languages: '["javascript", "python"]'
 ```
 
-## 🔧 Query Packs
+## 🔧 Configuration File
 
-Available CodeQL query packs for enhanced security analysis:
+You can create a `.github/codeql-config.yml` file to customize CodeQL analysis:
 
-- `security-extended`: Extended security queries beyond the default set
-- `security-and-quality`: Comprehensive security and code quality queries
-- Custom query packs: Specify your own query pack URLs
+```yaml
+name: "Custom CodeQL Config"
+
+disable-default-rules: false
+
+queries:
+  - uses: security-extended
+  - uses: security-and-quality
+
+paths-ignore:
+  - node_modules
+  - vendor
+  - "**/*.test.js"
+
+paths:
+  - src
+  - lib
+```
 
 ## 🛡️ Required Permissions
 
@@ -154,5 +163,5 @@ permissions:
 
 - [CodeQL Documentation](https://codeql.github.com/docs/)
 - [GitHub Code Scanning](https://docs.github.com/en/code-security/code-scanning)
-- [CodeQL Query Packs](https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs)
+- [CodeQL Configuration](https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning)
 - [Supported Languages and Frameworks](https://codeql.github.com/docs/codeql-overview/supported-languages-and-frameworks/)
