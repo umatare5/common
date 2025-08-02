@@ -1,6 +1,6 @@
-# GoReleaser Reusable Workflow
+# go-release Reusable Workflow
 
-A reusable GitHub Actions workflow for automating Go project releases using GoReleaser.
+A reusable GitHub Actions workflow for automating Go project releases.
 
 ## 🚀 Usage
 
@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   release:
-    uses: umatare5/common/.github/workflows/goreleaser.yml@main
+    uses: umatare5/common/.github/workflows/go-release.yml@main
     with:
       runs_on: "ubuntu-24.04"
       go_version: "1.24.5"
@@ -50,36 +50,47 @@ Create an optional `.goreleaser.yml` file in your repository root.
 ```yaml
 jobs:
   release:
-    uses: umatare5/common/.github/workflows/goreleaser.yml@main
+    uses: umatare5/common/.github/workflows/go-release.yml@main
     with:
       runs_on: "ubuntu-latest"
-      fetch_depth: 0 # Full history for complete release information
-      goreleaser_args: "release --clean --parallelism=4"
+      fetch_depth: 0
+      goreleaser_version: "v2.11.1"
 ```
 
-### 2. Development Testing
-
-```yaml
-jobs:
-  test-release:
-    uses: umatare5/common/.github/workflows/goreleaser.yml@main
-    with:
-      goreleaser_args: "release --snapshot --clean --skip=publish"
-      enable_docker: false
-```
-
-### 3. Debug Mode
+### 2. Custom Configuration
 
 ```yaml
 jobs:
   release:
-    uses: umatare5/common/.github/workflows/goreleaser.yml@main
+    uses: umatare5/common/.github/workflows/go-release.yml@main
     with:
-      goreleaser_args: "release --clean --debug"
+      goreleaser_args: "release --clean --skip=validate"
+      enable_docker: false
+      registry: "docker.io"
+```
+
+### 3. Combined with Testing
+
+```yaml
+jobs:
+  test-build:
+    uses: umatare5/common/.github/workflows/go-test-build.yml@main
+
+  coverage:
+    uses: umatare5/common/.github/workflows/go-test-coverage.yml@main
+
+  lint:
+    uses: umatare5/common/.github/workflows/go-test-lint.yml@main
+
+  release:
+    needs: [test-build, coverage, lint]
+    uses: umatare5/common/.github/workflows/go-release.yml@main
+    with:
+      goreleaser_version: "v2.11.1"
 ```
 
 ## Related Links
 
 - [GoReleaser Documentation](https://goreleaser.com/)
-- [GitHub Actions Reusable Workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows)
-- [GitHub Packages Documentation](https://docs.github.com/en/packages)
+- [GoReleaser Configuration](https://goreleaser.com/customization/)
+- [GitHub Releases Documentation](https://docs.github.com/en/repositories/releasing-projects-on-github)

@@ -1,4 +1,4 @@
-name: Reusable GoReleaser Workflow
+name: Reusable Go Release Workflow
 
 # Required permissions for calling workflow:
 # permissions:
@@ -51,7 +51,8 @@ on:
         default: "goreleaser"
 
 jobs:
-  goreleaser:
+  release:
+    name: Go Release
     runs-on: ${{ inputs.runs_on }}
     steps:
       - name: Checkout
