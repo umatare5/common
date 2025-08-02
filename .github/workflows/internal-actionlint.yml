@@ -1,6 +1,4 @@
-name: actionlint
-permissions:
-  contents: read
+name: Internal actionlint
 
 on:
   push:
@@ -12,23 +10,4 @@ on:
 
 jobs:
   actionlint:
-    runs-on: ubuntu-latest
-    steps:
-      # Checkout the code repository to access GitHub Actions workflow files
-      - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-
-      # Download and install actionlint tool for workflow validation
-      - name: Download actionlint
-        id: get_actionlint
-        run: |
-          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
-        shell: bash
-
-      # Run actionlint to validate all GitHub Actions workflow files for syntax and best practices
-      - name: Check workflow files
-        run: |
-          echo "Running actionlint to check GitHub Actions workflow files..."
-          ${{ steps.get_actionlint.outputs.executable }} .github/workflows/**/*.yml \
-            || echo "Issues found in workflow files - please review and fix manually"
-        shell: bash
+    uses: ./.github/workflows/actionlint.yml
