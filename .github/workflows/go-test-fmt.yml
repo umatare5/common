@@ -1,4 +1,4 @@
-name: Reusable golangci-lint Workflow
+name: Reusable Go Format and Lint Workflow
 
 on:
   workflow_call:
@@ -50,8 +50,8 @@ on:
         default: ""
 
 jobs:
-  lint:
-    name: Run golangci-lint
+  fmt:
+    name: Run Go Format and Lint
     runs-on: ${{ inputs.runs_on }}
 
     steps:

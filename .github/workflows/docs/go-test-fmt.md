@@ -1,21 +1,21 @@
-# golangci-lint Reusable Workflow
+# go-test-fmt Reusable Workflow
 
-A reusable GitHub Actions workflow for automated Go code quality checks using golangci-lint.
+A reusable GitHub Actions workflow for automated Go code formatting and quality checks.
 
 ## 🚀 Usage
 
 ### Basic Usage
 
 ```yaml
-name: Lint
+name: Format and Lint
 on: [pull_request]
 
 permissions:
   contents: read
 
 jobs:
-  lint:
-    uses: umatare5/common/.github/workflows/golangci-lint.yml@main
+  fmt:
+    uses: umatare5/common/.github/workflows/go-test-fmt.yml@main
     with:
       runs_on: "ubuntu-24.04"
       go_version: "1.24.5"
@@ -46,8 +46,8 @@ Create an optional `.golangci.yml` file in your repository root.
 
 ```yaml
 jobs:
-  lint:
-    uses: umatare5/common/.github/workflows/golangci-lint.yml@main
+  fmt:
+    uses: umatare5/common/.github/workflows/go-test-fmt.yml@main
     with:
       golangci_lint_config: "configs/lint.yml"
       golangci_lint_args: "--verbose --print-resources-usage --issues-exit-code=0"
@@ -58,26 +58,24 @@ jobs:
 
 ```yaml
 jobs:
-  lint:
-    uses: umatare5/common/.github/workflows/golangci-lint.yml@main
+  fmt:
+    uses: umatare5/common/.github/workflows/go-test-fmt.yml@main
 
-  test:
-    needs: lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version: "1.24.5"
-      - run: go test ./...
+  test-build:
+    needs: fmt
+    uses: umatare5/common/.github/workflows/go-test-build.yml@main
+
+  coverage:
+    needs: fmt
+    uses: umatare5/common/.github/workflows/go-test-coverage.yml@main
 ```
 
 ### 3. Performance Optimization
 
 ```yaml
 jobs:
-  lint:
-    uses: umatare5/common/.github/workflows/golangci-lint.yml@main
+  fmt:
+    uses: umatare5/common/.github/workflows/go-test-fmt.yml@main
     with:
       runs_on: "ubuntu-latest"
       fetch_depth: 0 # Full history for comprehensive analysis
