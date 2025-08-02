@@ -4,7 +4,10 @@ name: Reusable OSSF Scorecard Workflow
 # permissions:
 #   contents: read        # For checking out code
 #   security-events: write # For uploading SARIF results to code-scanning dashboard
-#   id-token: write       # For publishing results and getting a badge
+#   id-token: write       # For publishing results and getting a badge (only on default branch)
+
+# Note: The publish_results feature only works on the default branch.
+# Ensure the calling workflow handles branch restrictions if needed.
 
 on:
   workflow_call:
@@ -63,16 +66,6 @@ jobs:
   scorecard_analysis:
     name: OSSF Scorecard Analysis
     runs-on: ${{ inputs.runs_on }}
-    # Only run on default branch or pull requests to ensure publish_results works correctly
-    if: github.event.repository.default_branch == github.ref_name || github.event_name == 'pull_request'
-    permissions:
-      # Needed to upload the results to code-scanning dashboard
-      security-events: write
-      # Needed to publish results and get a badge (see publish_results below)
-      id-token: write
-      # Required for private repositories
-      contents: read
-      actions: read
 
     steps:
       # Checkout the code repository to access source files for analysis
@@ -90,8 +83,8 @@ jobs:
           results_format: ${{ inputs.results_format }}
           # Use repo_token for private repositories or enhanced Branch-Protection checks
           repo_token: ${{ secrets.scorecard_token }}
-          # Publish results to OpenSSF REST API for public repositories
-          publish_results: ${{ inputs.publish_results }}
+          # Publish results to OpenSSF REST API (only works on default branch)
+          publish_results: ${{ inputs.publish_results && github.event.repository.default_branch == github.ref_name }}
 
       # Upload the results as artifacts for later access and review
       - name: Upload Scorecard results artifact

@@ -1,5 +1,9 @@
 name: Reusable Tagging Workflow
 
+# Required permissions for calling workflow:
+# permissions:
+#   contents: write       # For creating and pushing tags
+
 on:
   workflow_call:
     inputs:
