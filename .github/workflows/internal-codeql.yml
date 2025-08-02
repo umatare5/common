@@ -18,3 +18,5 @@ permissions:
 jobs:
   codeql:
     uses: ./.github/workflows/codeql.yml
+    with:
+      codeql_config: ""
