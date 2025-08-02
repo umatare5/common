@@ -48,6 +48,11 @@ on:
         required: false
         type: boolean
         default: true
+      coverage_exclude_pattern:
+        description: "Regular expression pattern to exclude files/directories from coverage"
+        required: false
+        type: string
+        default: ""
 
 jobs:
   coverage:
@@ -86,6 +91,22 @@ jobs:
           else
             gotestsum --format ${{ inputs.gotestsum_format }} -- -coverprofile=${{ inputs.coverage_file }} ${{ inputs.test_packages }}
           fi
+
+      # Filter coverage data to exclude specified patterns
+      - name: Filter coverage data
+        if: inputs.coverage_exclude_pattern != ''
+        run: |
+          # Create a temporary file for filtered coverage
+          temp_coverage=$(mktemp)
+
+          # Copy the header line
+          head -1 ${{ inputs.coverage_file }} > "$temp_coverage"
+
+          # Filter out lines matching the exclude pattern (accounting for coverage file format)
+          tail -n +2 ${{ inputs.coverage_file }} | grep -vE '${{ inputs.coverage_exclude_pattern }}' >> "$temp_coverage"
+
+          # Replace the original coverage file
+          mv "$temp_coverage" ${{ inputs.coverage_file }}
 
       # Parse coverage report and extract overall coverage percentage for validation
       - name: Extract coverage percentage
