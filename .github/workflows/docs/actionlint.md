@@ -31,12 +31,12 @@ jobs:
 
 ## ⚙️ Input Parameters
 
-| Parameter          | Type   | Description                                   | Default                        |
-| ------------------ | ------ | --------------------------------------------- | ------------------------------ |
-| `checkout-ref`     | string | The branch, tag or SHA to checkout            | `""`                           |
-| `runs_on`          | string | Runner to use for the job                     | `"ubuntu-24.04"`               |
+| Parameter          | Type   | Description                                  | Default                        |
+| ------------------ | ------ | -------------------------------------------- | ------------------------------ |
+| `checkout-ref`     | string | The branch, tag or SHA to checkout           | `""`                           |
+| `runs_on`          | string | Runner to use for the job                    | `"ubuntu-24.04"`               |
 | `fetch_depth`      | number | Number of commits to fetch (0 = all history) | `1`                            |
-| `workflow_pattern` | string | Pattern for workflow files to check           | `".github/workflows/**/*.yml"` |
+| `workflow_pattern` | string | Pattern for workflow files to check          | `".github/workflows/**/*.yml"` |
 | `config_file`      | string | Path to actionlint config file               | `".github/actionlint.yml"`     |
 
 ## 📝 Prerequisites
