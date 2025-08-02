@@ -12,7 +12,6 @@ on:
 permissions:
   contents: read # For checking out code
   security-events: write # For uploading SARIF results to code-scanning dashboard
-  id-token: write # For publishing results and getting a badge (only on default branch)
 
 jobs:
   scorecard_analysis:
@@ -33,7 +32,8 @@ jobs:
         with:
           results_file: results.sarif
           results_format: sarif
-          publish_results: true
+          # Disable publishing to avoid workflow verification issues
+          publish_results: false
 
       # Upload the results as artifacts for later access and review
       - name: Upload Scorecard results artifact
