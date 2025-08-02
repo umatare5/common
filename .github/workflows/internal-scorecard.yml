@@ -17,5 +17,3 @@ permissions:
 jobs:
   scorecard:
     uses: ./.github/workflows/scorecard.yml
-    with:
-      runs_on: "ubuntu-latest"

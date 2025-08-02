@@ -16,7 +16,7 @@ on:
         description: "Runner to use for the job"
         required: false
         type: string
-        default: "ubuntu-24.04"
+        default: "ubuntu-latest"
       fetch_depth:
         description: "Number of commits to fetch (0 = all history)"
         required: false
