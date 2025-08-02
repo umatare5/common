@@ -23,8 +23,8 @@ jobs:
 | ------------------------------------------------ | --------------------------------------------- | -------------------------------------- |
 | [`go-test-build.yml`](./go-test-build.yml)       | Go testing and binary build                   | [📖 Guide](./docs/go-test-build.md)    |
 | [`go-test-coverage.yml`](./go-test-coverage.yml) | Go coverage testing with thresholds           | [📖 Guide](./docs/go-test-coverage.md) |
-| [`golangci-lint.yml`](./golangci-lint.yml)       | Go code quality checks with golangci-lint     | [📖 Guide](./docs/golangci-lint.md)    |
-| [`goreleaser.yml`](./goreleaser.yml)             | Automated Go project releases with GoReleaser | [📖 Guide](./docs/goreleaser.md)       |
+| [`go-test-fmt.yml`](./go-test-fmt.yml)           | Go code formatting and quality checks         | [📖 Guide](./docs/go-test-fmt.md)      |
+| [`go-release.yml`](./go-release.yml)             | Automated Go project releases                 | [📖 Guide](./docs/go-release.md)       |
 | [`tagging.yml`](./tagging.yml)                   | Automated Git tag creation from version files | [📖 Guide](./docs/tagging.md)          |
 
 > [!Note]

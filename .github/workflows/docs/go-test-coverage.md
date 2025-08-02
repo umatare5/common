@@ -75,8 +75,8 @@ jobs:
     with:
       coverage_threshold: 85
 
-  lint:
-    uses: umatare5/common/.github/workflows/golangci-lint.yml@main
+  fmt:
+    uses: umatare5/common/.github/workflows/go-test-fmt.yml@main
 ```
 
 ## Related Links

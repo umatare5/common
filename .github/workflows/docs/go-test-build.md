@@ -80,7 +80,7 @@ jobs:
       coverage_threshold: 85
 
   fmt:
-    uses: umatare5/common/.github/workflows/go-test-build.yml@main
+    uses: umatare5/common/.github/workflows/go-test-fmt.yml@main
 ```
 
 ## Related Links
