@@ -8,16 +8,50 @@ on:
         required: false
         type: string
         default: ""
+      runs_on:
+        description: "Runner to use for the job"
+        required: false
+        type: string
+        default: "ubuntu-24.04"
+      fetch_depth:
+        description: "Number of commits to fetch (0 = all history)"
+        required: false
+        type: number
+        default: 1
+      workflow_pattern:
+        description: "Pattern for workflow files to check"
+        required: false
+        type: string
+        default: ".github/workflows/**/*.yml"
+      config_file:
+        description: "Path to actionlint config file"
+        required: false
+        type: string
+        default: ".github/actionlint.yml"
 
 jobs:
   actionlint:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs_on }}
     steps:
       # Checkout the code repository to access GitHub Actions workflow files
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           ref: ${{ inputs.checkout-ref }}
+          fetch-depth: ${{ inputs.fetch_depth }}
+
+      # Validate configuration file existence and set up config arguments
+      - name: Setup configuration
+        id: config_setup
+        run: |
+          if [ -f "${{ inputs.config_file }}" ]; then
+            echo "config_arg=-config-file ${{ inputs.config_file }}" >> $GITHUB_OUTPUT
+            echo "✓ Using config: ${{ inputs.config_file }}"
+          else
+            echo "config_arg=" >> $GITHUB_OUTPUT
+            echo "ℹ Using default settings"
+          fi
+        shell: bash
 
       # Download and install actionlint tool for workflow validation
       - name: Download actionlint
@@ -30,6 +64,6 @@ jobs:
       - name: Check workflow files
         run: |
           echo "Running actionlint to check GitHub Actions workflow files..."
-          ${{ steps.get_actionlint.outputs.executable }} .github/workflows/**/*.yml \
+          ${{ steps.get_actionlint.outputs.executable }} ${{ steps.config_setup.outputs.config_arg }} ${{ inputs.workflow_pattern }} \
             || echo "Issues found in workflow files - please review and fix manually"
         shell: bash
