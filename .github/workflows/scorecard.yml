@@ -12,12 +12,11 @@ on:
 permissions:
   contents: read # For checking out code
   security-events: write # For uploading SARIF results to code-scanning dashboard
-  id-token: write # For publishing results and getting a badge (only on default branch)
 
 jobs:
   scorecard_analysis:
     name: OSSF Scorecard Analysis
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       # Checkout the code repository to access source files for analysis
@@ -33,8 +32,8 @@ jobs:
         with:
           results_file: results.sarif
           results_format: sarif
-          # Publish results to OpenSSF REST API (only works on default branch)
-          publish_results: ${{ github.event.repository.default_branch == github.ref_name }}
+          # Disable publishing to avoid workflow verification issues
+          publish_results: false
 
       # Upload the results as artifacts for later access and review
       - name: Upload Scorecard results artifact
