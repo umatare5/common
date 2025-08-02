@@ -26,12 +26,12 @@ jobs:
 
 ## ⚙️ Input Parameters
 
-| Parameter       | Type   | Description                                  | Default                       |
-| --------------- | ------ | -------------------------------------------- | ----------------------------- |
-| `languages`     | string | Languages to analyze as JSON array           | `'["javascript", "python"]'`  |
-| `runs_on`       | string | Runner to use for the job                    | `ubuntu-latest`               |
-| `fetch_depth`   | number | Number of commits to fetch (0 = all history) | `1`                           |
-| `codeql_config` | string | Path to CodeQL configuration file            | `./.github/codeql-config.yml` |
+| Parameter       | Type   | Description                                  | Default            |
+| --------------- | ------ | -------------------------------------------- | ------------------ |
+| `languages`     | string | Languages to analyze as JSON array           | `'["go"]'`         |
+| `runs_on`       | string | Runner to use for the job                    | `ubuntu-latest`    |
+| `fetch_depth`   | number | Number of commits to fetch (0 = all history) | `1`                |
+| `codeql_config` | string | Path to CodeQL configuration file            | `""` (auto-detect) |
 
 ## 🔍 Supported Languages
 
@@ -55,7 +55,7 @@ CodeQL supports analysis for the following languages:
 
 - Repository with source code in supported languages
 - Appropriate permissions configured for security events
-- Optional: Create `.github/codeql-config.yml` for advanced configuration
+- Optional: Create `.github/codeql-config.yml` for advanced configuration (automatically detected)
 
 ## 📖 Advanced Usage
 
@@ -76,8 +76,8 @@ jobs:
   codeql:
     uses: umatare5/common/.github/workflows/codeql.yml@main
     with:
-      languages: '["javascript", "python"]'
-      codeql_config: "./.github/custom-codeql-config.yml"
+      languages: '["go"]'
+      codeql_config: ".github/custom-codeql-config.yml"
 ```
 
 ### 3. Full History Analysis
@@ -87,7 +87,7 @@ jobs:
   codeql:
     uses: umatare5/common/.github/workflows/codeql.yml@main
     with:
-      languages: '["javascript", "python", "go"]'
+      languages: '["go"]'
       fetch_depth: 0 # Full history for better analysis
 ```
 
@@ -98,7 +98,7 @@ jobs:
   codeql:
     uses: umatare5/common/.github/workflows/codeql.yml@main
     with:
-      languages: '["javascript"]'
+      languages: '["go"]'
       runs_on: "ubuntu-latest-4-cores" # Use larger runner for faster analysis
 ```
 
@@ -114,8 +114,16 @@ jobs:
   codeql:
     uses: umatare5/common/.github/workflows/codeql.yml@main
     with:
-      languages: '["javascript", "python"]'
+      languages: '["go"]'
 ```
+
+## 🎯 Auto-Detection Features
+
+### Configuration Files
+
+- **Default**: CodeQL uses built-in configuration for standard analysis
+- **Auto-detect**: Automatically detects `.github/codeql-config.yml` if present
+- **Custom**: Specify alternative config file paths when needed
 
 ## 🔧 Configuration File
 

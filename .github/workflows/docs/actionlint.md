@@ -31,18 +31,19 @@ jobs:
 
 ## ⚙️ Input Parameters
 
-| Parameter          | Type   | Description                                  | Default                        |
-| ------------------ | ------ | -------------------------------------------- | ------------------------------ |
-| `checkout-ref`     | string | The branch, tag or SHA to checkout           | `""`                           |
-| `runs_on`          | string | Runner to use for the job                    | `"ubuntu-24.04"`               |
-| `fetch_depth`      | number | Number of commits to fetch (0 = all history) | `1`                            |
-| `workflow_pattern` | string | Pattern for workflow files to check          | `".github/workflows/**/*.yml"` |
-| `config_file`      | string | Path to actionlint config file               | `".github/actionlint.yml"`     |
+| Parameter          | Type   | Description                                  | Default            |
+| ------------------ | ------ | -------------------------------------------- | ------------------ |
+| `checkout-ref`     | string | The branch, tag or SHA to checkout           | `""`               |
+| `runs_on`          | string | Runner to use for the job                    | `"ubuntu-24.04"`   |
+| `fetch_depth`      | number | Number of commits to fetch (0 = all history) | `1`                |
+| `workflow_pattern` | string | Pattern for workflow files to check          | `""` (auto-detect) |
+| `config_file`      | string | Path to actionlint config file               | `""` (auto-detect) |
 
 ## 📝 Prerequisites
 
 - Repository with GitHub Actions workflow files in `.github/workflows/`
-- Optional: Create `.github/actionlint.yml` for custom configuration
+- Optional: Create `.github/actionlint.yml` for custom configuration (automatically detected)
+- Optional: Specify custom workflow patterns for targeted validation
 
 ## 📖 Advanced Usage
 
@@ -89,7 +90,7 @@ jobs:
 
 ## 🔧 Configuration File
 
-You can create a `.github/actionlint.yml` file to customize actionlint behavior:
+actionlint automatically detects `.github/actionlint.yml` in your repository. You can also specify a custom configuration file:
 
 ```yaml
 # Configuration for actionlint
@@ -118,6 +119,21 @@ ignore:
   - "shellcheck reported issue in this script"
 ```
 
+### Default Detection
+
+actionlint automatically searches for `.github/actionlint.yml` in your repository root. No configuration is needed for the default behavior.
+
+### Custom Configuration
+
+```yaml
+# Example: .github/custom-actionlint.yml
+jobs:
+  actionlint:
+    uses: umatare5/common/.github/workflows/actionlint.yml@main
+    with:
+      config_file: ".github/custom-actionlint.yml"
+```
+
 ## 🛠️ Execution Mode
 
 actionlint runs in **warning mode** by default:
@@ -126,6 +142,18 @@ actionlint runs in **warning mode** by default:
 - Suitable for gradual adoption and continuous feedback
 - Provides actionable insights without blocking CI/CD pipelines
 - Allows teams to incrementally improve workflow quality
+
+## 🎯 Auto-Detection Features
+
+### Workflow Files
+
+- **Default**: Automatically scans `.github/workflows/` directory
+- **Custom**: Specify patterns like `.github/workflows/ci-*.yml`
+
+### Configuration Files
+
+- **Default**: Automatically detects `.github/actionlint.yml`
+- **Custom**: Specify alternative config file paths
 
 ## 📊 What actionlint Checks
 

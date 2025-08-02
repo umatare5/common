@@ -29,7 +29,7 @@ on:
         description: "Path to CodeQL configuration file"
         required: false
         type: string
-        default: "./.github/codeql-config.yml"
+        default: ""
 
 jobs:
   analyze:
