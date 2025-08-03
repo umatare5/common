@@ -48,6 +48,11 @@ on:
         required: false
         type: boolean
         default: true
+      skip_build:
+        description: "Skip binary build and verification steps (useful for libraries)"
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   test:
@@ -93,12 +98,15 @@ jobs:
 
       # Compile the Go application into an executable binary
       - name: Build binary
+        if: ${{ !inputs.skip_build }}
         run: go build -o ${{ inputs.build_output_path }} ${{ inputs.build_cmd_path }}
 
       # Verify the built binary supports version flag and displays version information
       - name: Verify binary version
+        if: ${{ !inputs.skip_build }}
         run: ${{ inputs.build_output_path }} --version
 
       # Verify the built binary supports help flag and displays usage information
       - name: Verify binary help
+        if: ${{ !inputs.skip_build }}
         run: ${{ inputs.build_output_path }} --help

@@ -39,11 +39,13 @@ jobs:
 | `test_packages`         | string  | Test packages pattern                        | `./...`        |
 | `gotestsum_format`      | string  | gotestsum output format                      | `testname`     |
 | `enable_race_detection` | boolean | Enable race detection in tests               | `true`         |
+| `skip_build`            | boolean | Skip binary build and verification steps    | `false`        |
 
 ## 📝 Prerequisites
 
 - Go project with valid `go.mod` file and test files
-- Built binary should support `--version` and `--help` flags
+- **For CLI applications**: Built binary should support `--version` and `--help` flags
+- **For libraries**: Use `skip_build: true` to skip binary build and verification steps
 
 ## 📖 Advanced Usage
 
@@ -59,7 +61,18 @@ jobs:
       test_packages: "./internal/... ./pkg/..."
 ```
 
-### 2. Performance Optimization
+### 2. Library Projects (Skip Build)
+
+```yaml
+jobs:
+  test-build:
+    uses: umatare5/common/.github/workflows/go-test-build.yml@main
+    with:
+      skip_build: true
+      test_packages: "./..."
+```
+
+### 3. Performance Optimization
 
 ```yaml
 jobs:
@@ -71,7 +84,7 @@ jobs:
       runs_on: "ubuntu-latest"
 ```
 
-### 3. Parallel with Coverage Testing
+### 4. Parallel with Coverage Testing
 
 ```yaml
 jobs:
