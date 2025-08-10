@@ -1,4 +1,4 @@
-# GitHub Copilot Agent Mode – Instructions (for `umatare5/common`)
+# GitHub Copilot Agent Mode – Repo Instructions (for `umatare5/common`)
 
 ### Scope & Metadata
 
