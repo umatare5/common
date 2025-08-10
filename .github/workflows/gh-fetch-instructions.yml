@@ -12,7 +12,7 @@ on:
         description: "Base URL for downloading instructions files"
         required: false
         type: string
-        default: "https://raw.githubusercontent.com/github/awesome-copilot/main/instructions"
+        default: "https://raw.githubusercontent.com/github/awesome-copilot/main"
       instructions_files:
         description: "List of instructions files to download (newline-separated)"
         required: false
@@ -74,7 +74,7 @@ jobs:
           while IFS= read -r f; do
             [[ -z "${f}" ]] && continue
             echo "- ${f} -> .github/instructions/${f}"
-            curl -fsSL "${{ inputs.base_url }}/${f}" -o ".github/instructions/${f}"
+            curl -fsSL "${{ inputs.base_url }}/instructions/${f}" -o ".github/instructions/${f}"
           done <<< "${{ inputs.instructions_files }}"
 
       # Download prompt files from the specified base URL
@@ -83,7 +83,7 @@ jobs:
           while IFS= read -r f; do
             [[ -z "${f}" ]] && continue
             echo "- ${f} -> .github/prompts/${f}"
-            curl -fsSL "${{ inputs.base_url }}/${f}" -o ".github/prompts/${f}"
+            curl -fsSL "${{ inputs.base_url }}/prompts/${f}" -o ".github/prompts/${f}"
           done <<< "${{ inputs.prompts_files }}"
 
       # Stage all downloaded and modified instruction and prompt files
