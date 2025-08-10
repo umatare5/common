@@ -104,7 +104,7 @@ jobs:
       # Create pull request if there are changes to the instruction files
       - name: Create pull request
         if: steps.changes.outputs.changed == 'true'
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@9d6c7b1e2e5e1e2b1e2e1e2b1e2e1e2b1e2e1e2b # v6.0.4
         with:
           base: ${{ github.ref_name }}
           branch: ${{ inputs.branch_name }}
