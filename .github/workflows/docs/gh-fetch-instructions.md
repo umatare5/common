@@ -26,15 +26,15 @@ jobs:
 
 ## ⚙️ Input Parameters
 
-| Parameter            | Type   | Description                                                               | Default                                                                                                                  |
-| -------------------- | ------ | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `source_repo`        | string | Source repository for downloading instructions files (format: owner/repo) | `github/awesome-copilot`                                                                                                 |
-| `source_branch_name` | string | Source branch name for downloading instructions files                     | `main`                                                                                                                   |
-| `instructions_files` | string | List of instructions files to download (newline-separated)                | `go.instructions.md` `markdown.instructions.md` `github-actions-ci-cd-best-practices.instructions.md`                    |
-| `prompts_files`      | string | List of prompt files to download (newline-separated)                      | `ai-prompt-engineering-safety-review.prompt.md`                                                                          |
-| `runs_on`            | string | Runner to use for the job                                                 | `ubuntu-24.04`                                                                                                           |
-| `pr_branch_name`     | string | Branch name for the pull request                                          | `chore/copilot-instructions-sync`                                                                                        |
-| `pr_title`           | string | Pull request title                                                        | `[Auto-generated] Sync public Copilot instructions`                                                                      |
+| Parameter            | Type   | Description                                                               | Default                                                                                               |
+| -------------------- | ------ | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `source_repo`        | string | Source repository for downloading instructions files (format: owner/repo) | `github/awesome-copilot`                                                                              |
+| `source_branch_name` | string | Source branch name for downloading instructions files                     | `main`                                                                                                |
+| `instructions_files` | string | List of instructions files to download (newline-separated)                | `go.instructions.md` `markdown.instructions.md` `github-actions-ci-cd-best-practices.instructions.md` |
+| `prompts_files`      | string | List of prompt files to download (newline-separated)                      | `ai-prompt-engineering-safety-review.prompt.md`                                                       |
+| `runs_on`            | string | Runner to use for the job                                                 | `ubuntu-24.04`                                                                                        |
+| `pr_branch_name`     | string | Branch name for the pull request                                          | `chore/copilot-instructions-sync`                                                                     |
+| `pr_title`           | string | Pull request title                                                        | `[Auto-generated] Sync public Copilot instructions`                                                   |
 
 ## 📝 Prerequisites
 

@@ -90,7 +90,7 @@ jobs:
             [[ -z "${f}" ]] && continue
             echo "- ${f}" >> "$GITHUB_OUTPUT"
           done <<< "${{ inputs.instructions_files }}"
-          
+
           cat << 'EOF' >> "$GITHUB_OUTPUT"
 
           ### New Prompts
@@ -100,7 +100,7 @@ jobs:
             [[ -z "${f}" ]] && continue
             echo "- ${f}" >> "$GITHUB_OUTPUT"
           done <<< "${{ inputs.prompts_files }}"
-          
+
           echo "BODY_EOF" >> "$GITHUB_OUTPUT"
 
       # Download instructions files from the specified source repository
