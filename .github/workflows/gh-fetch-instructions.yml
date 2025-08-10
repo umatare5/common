@@ -1,0 +1,116 @@
+name: Reusable Copilot Instructions Sync Workflow
+
+# Required permissions for calling workflow:
+# permissions:
+#   contents: write        # For creating commits and branches
+#   pull-requests: write   # For creating pull requests
+
+on:
+  workflow_call:
+    inputs:
+      base_url:
+        description: "Base URL for downloading instructions files"
+        required: false
+        type: string
+        default: "https://raw.githubusercontent.com/github/awesome-copilot/main/instructions"
+      instructions_files:
+        description: "List of instructions files to download (newline-separated)"
+        required: false
+        type: string
+        default: |
+          go.instructions.md
+          markdown.instructions.md
+          github-actions-ci-cd-best-practices.instructions.md
+      prompts_files:
+        description: "List of prompt files to download (newline-separated)"
+        required: false
+        type: string
+        default: |
+          ai-prompt-engineering-safety-review.prompt.md
+      runs_on:
+        description: "Runner to use for the job"
+        required: false
+        type: string
+        default: "ubuntu-24.04"
+      branch_name:
+        description: "Branch name for the pull request"
+        required: false
+        type: string
+        default: "chore/copilot-instructions-sync"
+      pr_title:
+        description: "Pull request title"
+        required: false
+        type: string
+        default: "chore: Sync public Copilot instructions"
+      pr_body:
+        description: "Pull request body"
+        required: false
+        type: string
+        default: |
+          Automated sync of public Copilot instructions.
+          This PR updates files under .github/instructions/ and .github/prompts/.
+
+defaults:
+  run:
+    shell: bash -euo pipefail {0}
+
+jobs:
+  sync:
+    name: Sync Copilot Instructions
+    runs-on: ${{ inputs.runs_on }}
+    steps:
+      # Checkout the code repository to access and modify instruction files
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      # Create necessary directories for storing instructions and prompts
+      - name: Prepare directories
+        run: |
+          mkdir -p .github/instructions .github/prompts
+
+      # Download instructions files from the specified base URL
+      - name: Download instructions files
+        run: |
+          while IFS= read -r f; do
+            [[ -z "${f}" ]] && continue
+            echo "- ${f} -> .github/instructions/${f}"
+            curl -fsSL "${{ inputs.base_url }}/${f}" -o ".github/instructions/${f}"
+          done <<< "${{ inputs.instructions_files }}"
+
+      # Download prompt files from the specified base URL
+      - name: Download prompt files
+        run: |
+          while IFS= read -r f; do
+            [[ -z "${f}" ]] && continue
+            echo "- ${f} -> .github/prompts/${f}"
+            curl -fsSL "${{ inputs.base_url }}/${f}" -o ".github/prompts/${f}"
+          done <<< "${{ inputs.prompts_files }}"
+
+      # Stage all downloaded and modified instruction and prompt files
+      - name: Stage changes
+        run: |
+          git add -A .github/instructions .github/prompts
+
+      # Detect if there are any changes to commit and create pull request
+      - name: Detect changes
+        id: changes
+        run: |
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Create pull request if there are changes to the instruction files
+      - name: Create pull request
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@9d6c7b1e2e5e1e2b1e2e1e2b1e2e1e2b1e2e1e2b # v6.0.4
+        with:
+          base: ${{ github.ref_name }}
+          branch: ${{ inputs.branch_name }}
+          title: ${{ inputs.pr_title }}
+          commit-message: ${{ inputs.pr_title }}
+          body: ${{ inputs.pr_body }}
+          add-paths: |
+            .github/instructions/**
+            .github/prompts/**
