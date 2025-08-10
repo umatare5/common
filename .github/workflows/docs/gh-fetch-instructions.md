@@ -38,6 +38,18 @@ jobs:
 
 ## 📝 Prerequisites
 
+### Repository Settings
+
+**⚠️ Important**: This workflow requires write permissions to create branches and pull requests. You need to configure the following repository setting:
+
+1. Navigate to **Settings** > **Actions** > **General** in your repository
+2. Under **Workflow permissions**, select **"Read and write permissions"**
+3. Ensure **"Allow GitHub Actions to create and approve pull requests"** is checked
+
+Without these permissions, the workflow will fail when attempting to create branches or pull requests.
+
+### Files and Directories
+
 No additional configuration files are required. The workflow will automatically create `.github/instructions/` and `.github/prompts/` directories as needed.
 
 ## 📖 Advanced Usage
