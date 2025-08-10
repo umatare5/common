@@ -26,15 +26,15 @@ jobs:
 
 ## ⚙️ Input Parameters
 
-| Parameter            | Type   | Description                                                | Default                                                                                                                  |
-| -------------------- | ------ | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `base_url`           | string | Base URL for downloading instructions files                | `https://raw.githubusercontent.com/github/awesome-copilot/main/instructions`                                             |
-| `instructions_files` | string | List of instructions files to download (newline-separated) | `go.instructions.md` `markdown.instructions.md` `github-actions-ci-cd-best-practices.instructions.md`                    |
-| `prompts_files`      | string | List of prompt files to download (newline-separated)       | `ai-prompt-engineering-safety-review.prompt.md`                                                                          |
-| `runs_on`            | string | Runner to use for the job                                  | `ubuntu-24.04`                                                                                                           |
-| `branch_name`        | string | Branch name for the pull request                           | `chore/copilot-instructions-sync`                                                                                        |
-| `pr_title`           | string | Pull request title                                         | `chore: Sync public Copilot instructions`                                                                                |
-| `pr_body`            | string | Pull request body                                          | `Automated sync of public Copilot instructions. This PR updates files under .github/instructions/ and .github/prompts/.` |
+| Parameter            | Type   | Description                                                               | Default                                                                                                                  |
+| -------------------- | ------ | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `source_repo`        | string | Source repository for downloading instructions files (format: owner/repo) | `github/awesome-copilot`                                                                                                 |
+| `source_branch_name` | string | Source branch name for downloading instructions files                     | `main`                                                                                                                   |
+| `instructions_files` | string | List of instructions files to download (newline-separated)                | `go.instructions.md` `markdown.instructions.md` `github-actions-ci-cd-best-practices.instructions.md`                    |
+| `prompts_files`      | string | List of prompt files to download (newline-separated)                      | `ai-prompt-engineering-safety-review.prompt.md`                                                                          |
+| `runs_on`            | string | Runner to use for the job                                                 | `ubuntu-24.04`                                                                                                           |
+| `pr_branch_name`     | string | Branch name for the pull request                                          | `chore/copilot-instructions-sync`                                                                                        |
+| `pr_title`           | string | Pull request title                                                        | `[Auto-generated] Sync public Copilot instructions`                                                                      |
 
 ## 📝 Prerequisites
 
@@ -61,7 +61,8 @@ jobs:
   sync:
     uses: umatare5/common/.github/workflows/gh-fetch-instructions.yml@main
     with:
-      base_url: "https://raw.githubusercontent.com/your-org/copilot-instructions/main"
+      source_repo: "your-org/copilot-instructions"
+      source_branch_name: "develop"
       instructions_files: |
         go.instructions.md
         typescript.instructions.md
@@ -71,14 +72,30 @@ jobs:
         security-audit.prompt.md
 ```
 
-### 2. Custom Branch and PR Settings
+### 2. Different Branch from Default Repository
 
 ```yaml
 jobs:
   sync:
     uses: umatare5/common/.github/workflows/gh-fetch-instructions.yml@main
     with:
-      branch_name: "feature/update-copilot-instructions"
+      source_repo: "github/awesome-copilot"
+      source_branch_name: "beta"
+      instructions_files: |
+        go.instructions.md
+        typescript.instructions.md
+```
+
+### 3. Custom Branch and PR Settings
+
+```yaml
+jobs:
+  sync:
+    uses: umatare5/common/.github/workflows/gh-fetch-instructions.yml@main
+    with:
+      source_repo: "your-org/custom-instructions"
+      source_branch_name: "main"
+      pr_branch_name: "feature/update-copilot-instructions"
       pr_title: "feat: Update Copilot instructions and prompts"
       pr_body: |
         ## 🤖 Automated Copilot Instructions Update
@@ -90,7 +107,7 @@ jobs:
         Please review the changes before merging.
 ```
 
-### 3. Minimal Configuration (TypeScript Only)
+### 4. Minimal Configuration (TypeScript Only)
 
 ```yaml
 jobs:
@@ -102,7 +119,7 @@ jobs:
       prompts_files: ""
 ```
 
-### 4. Combined with Other Workflows
+### 5. Combined with Other Workflows
 
 ```yaml
 jobs:
@@ -136,8 +153,32 @@ The workflow will create/update the following directory structure:
 
 1. **Download**: Fetches specified instruction and prompt files from the configured source
 2. **Detection**: Checks for changes compared to existing files
-3. **PR Creation**: Creates a pull request only if there are changes
-4. **No-op**: Skips PR creation if no changes are detected
+3. **Branch Creation**: Creates a branch with the format `{pr_branch_name}-YYYY-MM-DD` (e.g., `chore/copilot-instructions-sync-2025-08-10`)
+4. **PR Body Generation**: Dynamically generates PR body with source repository link and file lists
+5. **PR Creation**: Creates a pull request only if there are changes
+6. **No-op**: Skips PR creation if no changes are detected
+
+## 📋 Generated PR Content
+
+The workflow automatically generates a pull request body with the following format:
+
+```markdown
+This PR sync of public Copilot instructions.
+
+### Source
+
+https://github.com/github/awesome-copilot
+
+### New Instructions
+
+- go.instructions.md
+- markdown.instructions.md
+- github-actions-ci-cd-best-practices.instructions.md
+
+### New Prompts
+
+- ai-prompt-engineering-safety-review.prompt.md
+```
 
 ## Related Links
 

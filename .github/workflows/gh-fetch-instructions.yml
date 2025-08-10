@@ -8,11 +8,16 @@ name: Reusable Copilot Instructions Sync Workflow
 on:
   workflow_call:
     inputs:
-      base_url:
-        description: "Base URL for downloading instructions files"
+      source_repo:
+        description: "Source repository for downloading instructions files (format: owner/repo)"
         required: false
         type: string
-        default: "https://raw.githubusercontent.com/github/awesome-copilot/main"
+        default: "github/awesome-copilot"
+      source_branch_name:
+        description: "Source branch name for downloading instructions files"
+        required: false
+        type: string
+        default: "main"
       instructions_files:
         description: "List of instructions files to download (newline-separated)"
         required: false
@@ -32,7 +37,7 @@ on:
         required: false
         type: string
         default: "ubuntu-24.04"
-      branch_name:
+      pr_branch_name:
         description: "Branch name for the pull request"
         required: false
         type: string
@@ -41,14 +46,7 @@ on:
         description: "Pull request title"
         required: false
         type: string
-        default: "chore: Sync public Copilot instructions"
-      pr_body:
-        description: "Pull request body"
-        required: false
-        type: string
-        default: |
-          Automated sync of public Copilot instructions.
-          This PR updates files under .github/instructions/ and .github/prompts/.
+        default: "[Auto-generated] Sync public Copilot instructions"
 
 defaults:
   run:
@@ -68,22 +66,61 @@ jobs:
         run: |
           mkdir -p .github/instructions .github/prompts
 
-      # Download instructions files from the specified base URL
+      # Generate current date for PR title and commit message
+      - name: Generate date
+        id: date
+        run: echo "current=$(date +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
+
+      # Generate PR body with source repository and file lists
+      - name: Generate PR body
+        id: pr_body
+        run: |
+          cat << 'EOF' >> "$GITHUB_OUTPUT"
+          content<<BODY_EOF
+          This PR sync of public Copilot instructions.
+
+          ### Source
+
+          https://github.com/${{ inputs.source_repo }}
+
+          ### New Instructions
+
+          EOF
+          while IFS= read -r f; do
+            [[ -z "${f}" ]] && continue
+            echo "- ${f}" >> "$GITHUB_OUTPUT"
+          done <<< "${{ inputs.instructions_files }}"
+          
+          cat << 'EOF' >> "$GITHUB_OUTPUT"
+
+          ### New Prompts
+
+          EOF
+          while IFS= read -r f; do
+            [[ -z "${f}" ]] && continue
+            echo "- ${f}" >> "$GITHUB_OUTPUT"
+          done <<< "${{ inputs.prompts_files }}"
+          
+          echo "BODY_EOF" >> "$GITHUB_OUTPUT"
+
+      # Download instructions files from the specified source repository
       - name: Download instructions files
         run: |
+          base_url="https://raw.githubusercontent.com/${{ inputs.source_repo }}/${{ inputs.source_branch_name }}"
           while IFS= read -r f; do
             [[ -z "${f}" ]] && continue
             echo "- ${f} -> .github/instructions/${f}"
-            curl -fsSL "${{ inputs.base_url }}/instructions/${f}" -o ".github/instructions/${f}"
+            curl -fsSL "${base_url}/instructions/${f}" -o ".github/instructions/${f}"
           done <<< "${{ inputs.instructions_files }}"
 
-      # Download prompt files from the specified base URL
+      # Download prompt files from the specified source repository
       - name: Download prompt files
         run: |
+          base_url="https://raw.githubusercontent.com/${{ inputs.source_repo }}/${{ inputs.source_branch_name }}"
           while IFS= read -r f; do
             [[ -z "${f}" ]] && continue
             echo "- ${f} -> .github/prompts/${f}"
-            curl -fsSL "${{ inputs.base_url }}/prompts/${f}" -o ".github/prompts/${f}"
+            curl -fsSL "${base_url}/prompts/${f}" -o ".github/prompts/${f}"
           done <<< "${{ inputs.prompts_files }}"
 
       # Stage all downloaded and modified instruction and prompt files
@@ -107,10 +144,10 @@ jobs:
         uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c # v6.1.0
         with:
           base: ${{ github.ref_name }}
-          branch: ${{ inputs.branch_name }}
-          title: ${{ inputs.pr_title }}
-          commit-message: ${{ inputs.pr_title }}
-          body: ${{ inputs.pr_body }}
+          branch: "${{ inputs.pr_branch_name }}-${{ steps.date.outputs.current }}"
+          title: "${{ inputs.pr_title }}: ${{ steps.date.outputs.current }}"
+          commit-message: "${{ inputs.pr_title }}: ${{ steps.date.outputs.current }}"
+          body: ${{ steps.pr_body.outputs.content }}
           add-paths: |
             .github/instructions/**
             .github/prompts/**
