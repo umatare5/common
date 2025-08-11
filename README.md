@@ -16,6 +16,16 @@ The following directories are intended to be used from other repositories:
 | `configs/`              | Configs for tools used in repository scaffolding.  | 📖 [README.md](configs/README.md)              |
 | `renovate/`             | Renovate configs for automated dependency updates. | 📖 [README.md](renovate/README.md)             |
 
+## Repositories
+
+Following my repositories use this repository as a submodule:
+
+- 🌐 [umatare5/controld-exporter](https://github.com/umatare5/controld-exporter)
+- 💹 [umatare5/twelvedata-exporter](https://github.com/umatare5/twelvedata-exporter)
+- 📗 [umatare5/cisco-ios-xe-wireless-go](https://github.com/umatare5/cisco-ios-xe-wireless-go)
+- 📡 [umatare5/wnc](https://github.com/umatare5/wnc)
+- 💻️ [umatare5/telee](https://github.com/umatare5/telee)
+
 ## Acknowledgments
 
 This code was developed with the assistance of **GitHub Copilot Agent Mode**. I'd like to express sincere gratitude to the global developer community for sharing their knowledge, code, and expertise through open source projects and public repositories.
