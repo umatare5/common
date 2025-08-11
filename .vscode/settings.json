@@ -4,5 +4,6 @@
         {
             "file": ".vscode/.copilot-commit-message-instructions.md"
         }
-    ]
+    ],
+    "chat.promptFiles": true,
 }
