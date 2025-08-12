@@ -14,6 +14,8 @@ The following directories are intended to be used from other repositories:
 | `.github/workflows/`    | Reusable GitHub Actions workflows.                 | 📖 [README.md](.github/workflows/README.md)    |
 | `.github/instructions/` | Instructions for GitHub Copilot Agent Mode.        | 📖 [README.md](.github/instructions/README.md) |
 | `configs/`              | Configs for tools used in repository scaffolding.  | 📖 [README.md](configs/README.md)              |
+| `instructions/`         | Additional instructions for GitHub Copilot.        | 📝 Files downloadable via workflow             |
+| `prompts/`              | Prompt templates for GitHub Copilot.               | 📝 Files downloadable via workflow             |
 | `renovate/`             | Renovate configs for automated dependency updates. | 📖 [README.md](renovate/README.md)             |
 
 ## Repositories
