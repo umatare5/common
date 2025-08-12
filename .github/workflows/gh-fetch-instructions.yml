@@ -71,6 +71,11 @@ jobs:
         id: date
         run: echo "current=$(date +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
 
+      # Generate source repository identifier for branch naming
+      - name: Generate source repo identifier
+        id: source
+        run: echo "repo_id=$(echo '${{ inputs.source_repo }}' | sed 's|/|-|g')" >> "$GITHUB_OUTPUT"
+
       # Generate PR body with source repository and file lists
       - name: Generate PR body
         id: pr_body
@@ -144,7 +149,7 @@ jobs:
         uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
         with:
           base: ${{ github.ref_name }}
-          branch: "${{ inputs.pr_branch_name }}-${{ steps.date.outputs.current }}"
+          branch: "${{ inputs.pr_branch_name }}_${{ steps.date.outputs.current }}_${{ steps.source.outputs.repo_id }}"
           title: "${{ inputs.pr_title }}: ${{ steps.date.outputs.current }}"
           commit-message: "${{ inputs.pr_title }}: ${{ steps.date.outputs.current }}"
           body: ${{ steps.pr_body.outputs.content }}
