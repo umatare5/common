@@ -46,7 +46,7 @@ on:
         description: "Pull request title"
         required: false
         type: string
-        default: "[Auto-generated] Sync public Copilot instructions"
+        default: "[Auto-generated] Sync Public Copilot Instructions"
 
 defaults:
   run:
@@ -150,7 +150,7 @@ jobs:
         with:
           base: ${{ github.ref_name }}
           branch: "${{ inputs.pr_branch_name }}_${{ steps.date.outputs.current }}_${{ steps.source.outputs.repo_id }}"
-          title: "${{ inputs.pr_title }}: ${{ steps.date.outputs.current }}"
+          title: "${{ inputs.pr_title }}: ${{ steps.date.outputs.current }} (${{ inputs.source_repo }})"
           commit-message: "${{ inputs.pr_title }}: ${{ steps.date.outputs.current }}"
           body: ${{ steps.pr_body.outputs.content }}
           add-paths: |
