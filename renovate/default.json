@@ -4,6 +4,9 @@
   "minimumReleaseAge": "7 days",
   "automerge": true,
   "platformAutomerge": true,
+  "postUpdateOptions": [
+    "gomodTidy"
+  ],
   "labels": ["Type: Dependencies"],
   "packageRules": [
     {
