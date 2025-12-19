@@ -70,7 +70,7 @@ jobs:
       # Cache golangci-lint binary and dependencies for faster subsequent runs
       - name: Cache golangci-lint
         if: ${{ inputs.enable_cache }}
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         with:
           path: ~/.cache/golangci-lint
           key: golangci-lint-${{ runner.os }}-${{ hashFiles(inputs.golangci_lint_config) }}${{ inputs.cache_key_suffix }}
