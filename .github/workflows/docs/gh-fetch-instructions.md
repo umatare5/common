@@ -35,6 +35,7 @@ jobs:
 | `runs_on`            | string | Runner to use for the job                                                 | `ubuntu-24.04`                                                                                        |
 | `pr_branch_name`     | string | Branch name for the pull request                                          | `chore/copilot-instructions-sync`                                                                     |
 | `pr_title`           | string | Pull request title                                                        | `[Auto-generated] Sync public Copilot instructions`                                                   |
+| `timeout_minutes`    | number | Job timeout in minutes                                                    | `10`                                                                                                  |
 
 ## 📝 Prerequisites
 
