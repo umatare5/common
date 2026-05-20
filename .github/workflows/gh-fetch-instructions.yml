@@ -47,6 +47,11 @@ on:
         required: false
         type: string
         default: "[Auto-generated] Sync Public Copilot Instructions"
+      timeout_minutes:
+        description: "Job timeout in minutes"
+        required: false
+        type: number
+        default: 10
 
 defaults:
   run:
@@ -56,6 +61,7 @@ jobs:
   sync:
     name: Sync Copilot Instructions
     runs-on: ${{ inputs.runs_on }}
+    timeout-minutes: ${{ inputs.timeout_minutes }}
     steps:
       # Checkout the code repository to access and modify instruction files
       - name: Checkout repository
