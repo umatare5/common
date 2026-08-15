@@ -55,7 +55,7 @@ jobs:
             exit 1
           fi
 
-      # Configure git user settings and create annotated tag based on version file
+      # Configure git user settings and create/push annotated tag based on version file
       - name: Create and push tag
         env:
           VERSION: ${{ env.VERSION }}
@@ -64,6 +64,7 @@ jobs:
           git config user.email "${{ inputs.git_user_email }}"
 
           TAG_NAME="${{ inputs.tag_prefix }}$VERSION"
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
           echo "Creating tag: $TAG_NAME"
 
           if git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
@@ -73,4 +74,27 @@ jobs:
 
           git tag -a "$TAG_NAME" -m "Release version $VERSION"
           git push origin "$TAG_NAME"
-          echo "Successfully created and pushed tag: $TAG_NAME"
+
+      # Wait until the pushed tag is visible on origin
+      - name: Wait the tag creation
+        env:
+          TAG_NAME: ${{ env.TAG_NAME }}
+        run: |
+          if [ -z "$TAG_NAME" ]; then
+            echo "Error: TAG_NAME is empty"
+            exit 1
+          fi
+
+          echo "Waiting for tag propagation on origin: $TAG_NAME"
+          for attempt in $(seq 1 60); do
+            if git ls-remote --tags origin "refs/tags/$TAG_NAME" | grep -q "refs/tags/$TAG_NAME$"; then
+              echo "Successfully created and verified remote tag: $TAG_NAME"
+              exit 0
+            fi
+
+            echo "[$attempt/60] Tag is not visible on origin yet; retrying in 1s"
+            sleep 1
+          done
+
+          echo "Error: Timed out waiting for remote tag visibility: $TAG_NAME"
+          exit 1
