@@ -1,0 +1,156 @@
+name: Reusable Prometheus Rules Check Workflow
+
+on:
+  workflow_call:
+    inputs:
+      promtool_version:
+        description: "Prometheus release to take promtool from"
+        required: false
+        type: string
+        default: "3.13.2"
+      rule_files:
+        description: "Rule files to check (newline-separated)"
+        required: true
+        type: string
+      test_files:
+        description: "Rule unit test files to run (newline-separated)"
+        required: false
+        type: string
+        default: ""
+      config_files:
+        description: "Prometheus config files to check (newline-separated)"
+        required: false
+        type: string
+        default: ""
+      lint:
+        description: "Lint checks to apply to the rule files (all, duplicate-rules, none)"
+        required: false
+        type: string
+        default: "all"
+      runs_on:
+        description: "Runner to use for the job"
+        required: false
+        type: string
+        default: "ubuntu-24.04"
+      fetch_depth:
+        description: "Number of commits to fetch (0 = all history)"
+        required: false
+        type: number
+        default: 1
+      timeout_minutes:
+        description: "Job timeout in minutes"
+        required: false
+        type: number
+        default: 10
+
+defaults:
+  run:
+    shell: bash -euo pipefail {0}
+
+jobs:
+  promtool:
+    name: Check Prometheus Rules
+    runs-on: ${{ inputs.runs_on }}
+    timeout-minutes: ${{ inputs.timeout_minutes }}
+    permissions:
+      contents: read
+    steps:
+      # Checkout the code repository to access the rule, test and config files
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: ${{ inputs.fetch_depth }}
+
+      # Install promtool from the pinned Prometheus release, verifying the archive
+      # against the checksum file the release publishes beside it
+      - name: Install promtool
+        env:
+          PROMTOOL_VERSION: ${{ inputs.promtool_version }}
+        run: |
+          case "$(uname -m)" in
+            x86_64) arch="amd64" ;;
+            aarch64 | arm64) arch="arm64" ;;
+            *) echo "Unsupported architecture: $(uname -m)" >&2 && exit 1 ;;
+          esac
+
+          name="prometheus-${PROMTOOL_VERSION}.linux-${arch}"
+          base_url="https://github.com/prometheus/prometheus/releases/download/v${PROMTOOL_VERSION}"
+          bindir="${RUNNER_TEMP}/promtool"
+
+          mkdir -p "${bindir}"
+          cd "${bindir}"
+          curl -fsSL "${base_url}/${name}.tar.gz" -o "${name}.tar.gz"
+          curl -fsSL "${base_url}/sha256sums.txt" -o "sha256sums.txt"
+          sha256sum --ignore-missing --check "sha256sums.txt"
+
+          tar -xzf "${name}.tar.gz" --strip-components=1 "${name}/promtool"
+          echo "${bindir}" >> "$GITHUB_PATH"
+          ./promtool --version
+
+      # Check the rule files for syntax and for the lint findings promtool reports.
+      # --lint-fatal is required: without it a lint finding prints FAILED and the
+      # command still exits 0, so the step would pass while reporting a problem.
+      - name: Check rules
+        env:
+          RULE_FILES: ${{ inputs.rule_files }}
+          LINT: ${{ inputs.lint }}
+        run: |
+          # An unrecognised value is reported as a warning and leaves linting off,
+          # so it is rejected here rather than passed through
+          case "${LINT}" in
+            all | duplicate-rules | none) ;;
+            *) echo "lint must be all, duplicate-rules or none" >&2 && exit 1 ;;
+          esac
+
+          files=()
+          while IFS= read -r f; do
+            [[ -z "${f}" ]] && continue
+            files+=("${f}")
+          done <<< "${RULE_FILES}"
+
+          if [[ "${#files[@]}" -eq 0 ]]; then
+            echo "rule_files listed no file" >&2
+            exit 1
+          fi
+
+          promtool check rules --lint "${LINT}" --lint-fatal "${files[@]}"
+
+      # Run the rule unit tests. This is the only check that evaluates a rule against
+      # series, so it is the one that catches an expression selecting the wrong set
+      # rather than merely being malformed.
+      - name: Test rules
+        if: ${{ inputs.test_files != '' }}
+        env:
+          TEST_FILES: ${{ inputs.test_files }}
+        run: |
+          files=()
+          while IFS= read -r f; do
+            [[ -z "${f}" ]] && continue
+            files+=("${f}")
+          done <<< "${TEST_FILES}"
+
+          promtool test rules "${files[@]}" 2>&1 | tee "${RUNNER_TEMP}/promtool-test.log"
+
+          # A test file whose own rule_files entry matches nothing is reported as a
+          # warning and still exits 0, which passes every assertion against no rules
+          if grep -q "no file match pattern" "${RUNNER_TEMP}/promtool-test.log"; then
+            echo "a test file references a rule file that matched nothing" >&2
+            exit 1
+          fi
+
+      # Check the Prometheus configuration files. Each rule file a rule_files section
+      # names is validated too, so this step needs the same lint flags as the rule
+      # check for a lint finding there to be fatal.
+      - name: Check config
+        if: ${{ inputs.config_files != '' }}
+        env:
+          CONFIG_FILES: ${{ inputs.config_files }}
+          LINT: ${{ inputs.lint }}
+        run: |
+          files=()
+          while IFS= read -r f; do
+            [[ -z "${f}" ]] && continue
+            files+=("${f}")
+          done <<< "${CONFIG_FILES}"
+
+          promtool check config --lint "${LINT}" --lint-fatal "${files[@]}"
