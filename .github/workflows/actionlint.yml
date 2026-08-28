@@ -39,6 +39,7 @@ jobs:
         with:
           ref: ${{ inputs.checkout-ref }}
           fetch-depth: ${{ inputs.fetch_depth }}
+          persist-credentials: false
 
       # Download and install actionlint tool for workflow validation
       - name: Download actionlint

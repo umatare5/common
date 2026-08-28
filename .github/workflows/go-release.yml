@@ -4,7 +4,6 @@ name: Reusable Go Release Workflow
 # permissions:
 #   contents: write      # For creating releases
 #   packages: write      # For pushing to ghcr.io
-#   id-token: write      # For OIDC authentication
 
 on:
   workflow_call:
@@ -60,6 +59,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: ${{ inputs.fetch_depth }}
+          persist-credentials: false
 
       # Set up Go development environment for building release binaries
       - name: Set up Go
