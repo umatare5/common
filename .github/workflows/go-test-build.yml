@@ -65,6 +65,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: ${{ inputs.fetch_depth }}
+          persist-credentials: false
 
       # Set up Go development environment with caching enabled for dependencies
       - name: Setup Go
@@ -85,7 +86,7 @@ jobs:
 
       # Install gotestsum for enhanced test output formatting and reporting
       - name: Install gotestsum
-        run: go install gotest.tools/gotestsum@latest
+        run: go install gotest.tools/gotestsum@v1.13.0
 
       # Execute unit tests with optional race detection for concurrent code safety
       - name: Run tests

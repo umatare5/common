@@ -4,5 +4,14 @@
     "github>umatare5/common//renovate/default.json",
     "github>umatare5/common//renovate/github-actions.json"
   ],
-  "dependencyDashboard": false
+  "dependencyDashboard": false,
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github/workflows/.+\\.ya?ml$/"],
+      "matchStrings": ["go install gotest\\.tools/gotestsum@(?<currentValue>v\\d+\\.\\d+\\.\\d+)"],
+      "depNameTemplate": "gotest.tools/gotestsum",
+      "datasourceTemplate": "go"
+    }
+  ]
 }
