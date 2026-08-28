@@ -12,6 +12,13 @@
       "matchStrings": ["go install gotest\\.tools/gotestsum@(?<currentValue>v\\d+\\.\\d+\\.\\d+)"],
       "depNameTemplate": "gotest.tools/gotestsum",
       "datasourceTemplate": "go"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github/workflows/go-vulncheck\\.yml$/"],
+      "matchStrings": ["golang\\.org/x/vuln/cmd/govulncheck@(?<currentValue>v\\d+\\.\\d+\\.\\d+)"],
+      "depNameTemplate": "golang.org/x/vuln",
+      "datasourceTemplate": "go"
     }
   ]
 }
