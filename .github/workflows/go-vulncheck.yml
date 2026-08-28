@@ -1,0 +1,80 @@
+name: Reusable Go Vulnerability Check Workflow
+
+# Required permissions for calling workflow:
+# permissions:
+#   contents: read       # For checking out code
+
+on:
+  workflow_call:
+    inputs:
+      go_version:
+        description: "Go version to use (empty: read go_version_file)"
+        required: false
+        type: string
+        default: ""
+      go_version_file:
+        description: "File to read the Go toolchain from"
+        required: false
+        type: string
+        default: "go.mod"
+      scan_packages:
+        description: "Package pattern to scan"
+        required: false
+        type: string
+        default: "./..."
+      runs_on:
+        description: "Runner to use for the job"
+        required: false
+        type: string
+        default: "ubuntu-24.04"
+      fetch_depth:
+        description: "Number of commits to fetch (0 = all history)"
+        required: false
+        type: number
+        default: 1
+      timeout_minutes:
+        description: "Job timeout in minutes"
+        required: false
+        type: number
+        default: 10
+
+defaults:
+  run:
+    shell: bash -euo pipefail {0}
+
+jobs:
+  go-vulncheck:
+    name: Check Go Vulnerabilities
+    runs-on: ${{ inputs.runs_on }}
+    timeout-minutes: ${{ inputs.timeout_minutes }}
+    permissions:
+      contents: read
+    steps:
+      # The github context of a called workflow is the caller's, so this takes
+      # the calling repository and go_version_file below resolves against the
+      # module being scanned
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: ${{ inputs.fetch_depth }}
+          persist-credentials: false
+
+      # go-version wins wherever it is non-empty, and the default leaves it
+      # empty so the scan runs on the toolchain the caller's own go.mod
+      # declares. That is the version a standard-library finding is reported
+      # against, and taking it from a workflow string would report against a
+      # version the repository never declared.
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: ${{ inputs.go_version }}
+          go-version-file: ${{ inputs.go_version_file }}
+
+      # The govulncheck release is pinned here rather than taken as an input, so
+      # one Renovate custom manager in this repository tracks it for every
+      # caller, the way gotestsum is tracked for the test workflows
+      - name: Run govulncheck
+        env:
+          SCAN_PACKAGES: ${{ inputs.scan_packages }}
+        run: |
+          go run golang.org/x/vuln/cmd/govulncheck@v1.7.0 "${SCAN_PACKAGES}"
