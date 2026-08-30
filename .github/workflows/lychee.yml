@@ -1,0 +1,127 @@
+name: Reusable Link Check Workflow
+
+# Required permissions for calling workflow:
+# permissions:
+#   contents: read       # For checking out code
+
+on:
+  workflow_call:
+    inputs:
+      lychee_version:
+        description: "lychee release to run"
+        required: false
+        type: string
+        default: "v0.24.2"
+      paths:
+        description: "Inputs to check (newline-separated)"
+        required: false
+        type: string
+        default: "."
+      config_file:
+        description: "lychee config file path (empty: discover lychee.toml)"
+        required: false
+        type: string
+        default: ""
+      lychee_args:
+        description: "Additional arguments for lychee"
+        required: false
+        type: string
+        default: ""
+      runs_on:
+        description: "Runner to use for the job"
+        required: false
+        type: string
+        default: "ubuntu-24.04"
+      fetch_depth:
+        description: "Number of commits to fetch (0 = all history)"
+        required: false
+        type: number
+        default: 1
+      timeout_minutes:
+        description: "Job timeout in minutes"
+        required: false
+        type: number
+        default: 10
+
+defaults:
+  run:
+    shell: bash -euo pipefail {0}
+
+jobs:
+  lychee:
+    name: Check Links
+    runs-on: ${{ inputs.runs_on }}
+    timeout-minutes: ${{ inputs.timeout_minutes }}
+    permissions:
+      contents: read
+    steps:
+      # The github context of a called workflow is the caller's, so this takes
+      # the calling repository and the paths below resolve against the
+      # documents that repository carries
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: ${{ inputs.fetch_depth }}
+          persist-credentials: false
+
+      # Install lychee from the pinned release, verifying the archive against the
+      # checksum file the release publishes beside it
+      - name: Install lychee
+        env:
+          LYCHEE_VERSION: ${{ inputs.lychee_version }}
+        run: |
+          case "$(uname -m)" in
+            x86_64) target="x86_64-unknown-linux-gnu" ;;
+            aarch64 | arm64) target="aarch64-unknown-linux-gnu" ;;
+            *) echo "Unsupported architecture: $(uname -m)" >&2 && exit 1 ;;
+          esac
+
+          name="lychee-${target}.tar.gz"
+          base_url="https://github.com/lycheeverse/lychee/releases/download/lychee-${LYCHEE_VERSION}"
+          bindir="${RUNNER_TEMP}/lychee"
+
+          mkdir -p "${bindir}"
+          cd "${bindir}"
+          curl -fsSL "${base_url}/${name}" -o "${name}"
+          curl -fsSL "${base_url}/${name}.sha256" -o "${name}.sha256"
+          sha256sum --check "${name}.sha256"
+
+          tar -xzf "${name}" --strip-components=1 "lychee-${target}/lychee"
+          echo "${bindir}" >> "$GITHUB_PATH"
+          ./lychee --version
+
+      # Check the links. GITHUB_TOKEN raises the github.com rate limit, which an
+      # anonymous run reaches as 429 on a repository that links to GitHub often.
+      - name: Check links
+        env:
+          PATHS: ${{ inputs.paths }}
+          CONFIG_FILE: ${{ inputs.config_file }}
+          LYCHEE_ARGS: ${{ inputs.lychee_args }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          targets=()
+          while IFS= read -r p; do
+            [[ -z "${p}" ]] && continue
+            targets+=("${p}")
+          done <<< "${PATHS}"
+
+          if [[ "${#targets[@]}" -eq 0 ]]; then
+            echo "paths listed no input" >&2
+            exit 1
+          fi
+
+          # lychee discovers lychee.toml on its own, but errors on an explicit
+          # --config naming a missing file, so an unreadable path is reported
+          # here rather than as a parse failure
+          config=()
+          if [[ -n "${CONFIG_FILE}" ]]; then
+            if [[ ! -f "${CONFIG_FILE}" ]]; then
+              echo "config_file not found: ${CONFIG_FILE}" >&2
+              exit 1
+            fi
+            config+=(--config "${CONFIG_FILE}")
+          fi
+
+          # LYCHEE_ARGS is split on whitespace so one string can carry several flags
+          # shellcheck disable=SC2086
+          lychee "${config[@]}" ${LYCHEE_ARGS} "${targets[@]}"
