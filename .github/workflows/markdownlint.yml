@@ -1,0 +1,60 @@
+name: Reusable markdownlint Workflow
+
+# Required permissions for calling workflow:
+# permissions:
+#   contents: read       # For checking out code
+
+on:
+  workflow_call:
+    inputs:
+      globs:
+        description: "Glob expression(s) of files to lint (newline-separated)"
+        required: false
+        type: string
+        default: "**/*.md"
+      runs_on:
+        description: "Runner to use for the job"
+        required: false
+        type: string
+        default: "ubuntu-24.04"
+      fetch_depth:
+        description: "Number of commits to fetch (0 = all history)"
+        required: false
+        type: number
+        default: 1
+      timeout_minutes:
+        description: "Job timeout in minutes"
+        required: false
+        type: number
+        default: 10
+
+defaults:
+  run:
+    shell: bash -euo pipefail {0}
+
+jobs:
+  markdownlint:
+    name: Check Markdown Files
+    runs-on: ${{ inputs.runs_on }}
+    timeout-minutes: ${{ inputs.timeout_minutes }}
+    permissions:
+      contents: read
+    steps:
+      # The github context of a called workflow is the caller's, so this takes
+      # the calling repository and the rules below resolve against the
+      # .markdownlint-cli2 file that repository carries
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: ${{ inputs.fetch_depth }}
+          persist-credentials: false
+
+      # The action bundles its own markdownlint-cli2, so the version every
+      # caller lints with is the one pinned here rather than whatever each
+      # contributor has on PATH. --fix is deliberately not offered: a run that
+      # repairs files it never commits reports success on a repository that is
+      # still unfixed.
+      - name: Run markdownlint-cli2
+        uses: DavidAnson/markdownlint-cli2-action@4580e1612f6407034edd6c0e4e316d725920867b # v24.2.0
+        with:
+          globs: ${{ inputs.globs }}
