@@ -29,6 +29,7 @@ jobs:
 | [`go-release.yml`](./go-release.yml)                       | Automated Go project releases                        | [📖 Guide](./docs/go-release.md)            |
 | [`go-vulncheck.yml`](./go-vulncheck.yml)                   | Go vulnerability scan with govulncheck               | [📖 Guide](./docs/go-vulncheck.md)          |
 | [`markdownlint.yml`](./markdownlint.yml)                   | Markdown style checks with markdownlint-cli2         | [📖 Guide](./docs/markdownlint.md)          |
+| [`lychee.yml`](./lychee.yml)                               | Link check for Markdown and HTML documents           | [📖 Guide](./docs/lychee.md)                |
 | [`promtool.yml`](./promtool.yml)                           | Prometheus rule validation and unit testing          | [📖 Guide](./docs/promtool.md)              |
 | [`tagging.yml`](./tagging.yml)                             | Automated Git tag creation from version files        | [📖 Guide](./docs/tagging.md)               |
 
