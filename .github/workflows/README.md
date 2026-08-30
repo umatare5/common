@@ -28,6 +28,7 @@ jobs:
 | [`go-test-fmt.yml`](./go-test-fmt.yml)                     | Go code formatting and quality checks                | [📖 Guide](./docs/go-test-fmt.md)           |
 | [`go-release.yml`](./go-release.yml)                       | Automated Go project releases                        | [📖 Guide](./docs/go-release.md)            |
 | [`go-vulncheck.yml`](./go-vulncheck.yml)                   | Go vulnerability scan with govulncheck               | [📖 Guide](./docs/go-vulncheck.md)          |
+| [`lychee.yml`](./lychee.yml)                               | Link check for Markdown and HTML documents           | [📖 Guide](./docs/lychee.md)                |
 | [`promtool.yml`](./promtool.yml)                           | Prometheus rule validation and unit testing          | [📖 Guide](./docs/promtool.md)              |
 | [`tagging.yml`](./tagging.yml)                             | Automated Git tag creation from version files        | [📖 Guide](./docs/tagging.md)               |
 
