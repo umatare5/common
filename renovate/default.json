@@ -1,28 +1,83 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:best-practices", ":timezone(Asia/Tokyo)"],
-  "minimumReleaseAge": "7 days",
-  "automerge": true,
-  "platformAutomerge": true,
-  "postUpdateOptions": [
-    "gomodTidy"
+  "extends": [
+    "config:best-practices",
+    ":timezone(Asia/Tokyo)",
+    ":semanticCommits"
   ],
+  "schedule": ["* 12-20 * * 1"],
+  "automerge": true,
+  "automergeSchedule": ["* 12-20 * * 4"],
+  "automergeStrategy": "squash",
+  "platformAutomerge": false,
+  "minimumReleaseAge": "7 days",
+  "internalChecksFilter": "strict",
+  "osvVulnerabilityAlerts": true,
+  "dependencyDashboard": true,
+  "dependencyDashboardOSVVulnerabilitySummary": "all",
+  "prHourlyLimit": 0,
+  "prConcurrentLimit": 0,
   "labels": ["Type: Dependencies"],
+  "pre-commit": {
+    "enabled": true
+  },
   "packageRules": [
     {
+      "description": "Major updates are merged by hand",
       "matchUpdateTypes": ["major"],
       "automerge": false,
-      "labels": ["Update: Major"]
+      "addLabels": ["Update: Major"]
     },
     {
+      "description": "Batch every minor update into a single PR",
       "matchUpdateTypes": ["minor"],
-      "automerge": true,
-      "labels": ["Update: Minor"]
+      "groupName": "all minor dependencies",
+      "groupSlug": "all-minor",
+      "addLabels": ["Update: Minor"]
     },
     {
+      "description": "Batch every patch update into a single PR",
       "matchUpdateTypes": ["patch"],
-      "automerge": true,
-      "labels": ["Update: Patch"]
+      "groupName": "all patch dependencies",
+      "groupSlug": "all-patch",
+      "addLabels": ["Update: Patch"]
+    },
+    {
+      "description": "Label digest and pin updates",
+      "matchUpdateTypes": ["digest", "pinDigest"],
+      "addLabels": ["Update: Digest"]
+    },
+    {
+      "description": "Lock file maintenance bypasses the cooldown by design, so it never merges unattended",
+      "matchUpdateTypes": ["lockFileMaintenance"],
+      "automerge": false
+    },
+    {
+      "description": "Keep one cooldown for every ecosystem, overriding the shorter npm default from config:best-practices",
+      "matchDatasources": ["npm"],
+      "minimumReleaseAge": "7 days"
+    },
+    {
+      "description": "GitHub runner images carry no release timestamp, so a cooldown would hold them forever",
+      "matchDatasources": ["github-runners"],
+      "minimumReleaseAge": null
+    },
+    {
+      "description": "Release the update types that cannot be aged, so they are not held forever",
+      "matchUpdateTypes": [
+        "pin",
+        "pinDigest",
+        "bump",
+        "lockfileUpdate",
+        "rollback",
+        "replacement",
+        "lockFileMaintenance"
+      ],
+      "minimumReleaseAge": null
     }
-  ]
+  ],
+  "vulnerabilityAlerts": {
+    "automergeSchedule": [],
+    "addLabels": ["Update: Security"]
+  }
 }

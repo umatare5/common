@@ -1,0 +1,10 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Profile for Go repositories",
+  "extends": [
+    "./default.json",
+    "./github-actions.json",
+    "./workflow-versions.json"
+  ],
+  "postUpdateOptions": ["gomodTidy"]
+}
