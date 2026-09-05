@@ -47,57 +47,51 @@ jobs:
 
       # Read version information from specified file for tag creation
       - name: Read VERSION file
-        id: read_version
-        run: |
-          if [ -f "${{ inputs.version_file }}" ]; then
-            VERSION=$(cat "${{ inputs.version_file }}")
-            echo "VERSION=$VERSION" >> $GITHUB_ENV
-            echo "Found version: $VERSION"
-          else
-            echo "Error: Version file '${{ inputs.version_file }}' not found"
-            exit 1
-          fi
-
-      # Configure git user settings and create/push annotated tag based on version file
-      - name: Create and push tag
         env:
-          VERSION: ${{ env.VERSION }}
+          VERSION_FILE: ${{ inputs.version_file }}
+          TAG_PREFIX: ${{ inputs.tag_prefix }}
         run: |
-          git config user.name "${{ inputs.git_user_name }}"
-          git config user.email "${{ inputs.git_user_email }}"
+          [ -f "$VERSION_FILE" ] || { echo "Error: version file not found: $VERSION_FILE" >&2; exit 1; }
 
-          TAG_NAME="${{ inputs.tag_prefix }}$VERSION"
-          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
-          echo "Creating tag: $TAG_NAME"
+          version="$(tr -d '[:space:]' <"$VERSION_FILE")"
+          echo "TAG_NAME=${TAG_PREFIX}${version}" >>"$GITHUB_ENV"
+          echo "VERSION=${version}" >>"$GITHUB_ENV"
 
-          if git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
-            echo "Warning: Tag $TAG_NAME already exists, skipping"
-            exit 0
+      # The checkout is shallow and fetches no tags, so a local rev-parse would
+      # never match; the remote is the only place the tag can already exist
+      - name: Skip when the tag already exists
+        run: |
+          if git ls-remote --exit-code --tags origin "refs/tags/${TAG_NAME}" >/dev/null 2>&1; then
+            echo "TAG_EXISTS=true" >>"$GITHUB_ENV"
+            echo "Tag ${TAG_NAME} already exists on origin"
           fi
 
-          git tag -a "$TAG_NAME" -m "Release version $VERSION"
+      - name: Create and push tag
+        if: env.TAG_EXISTS != 'true'
+        env:
+          GIT_USER_NAME: ${{ inputs.git_user_name }}
+          GIT_USER_EMAIL: ${{ inputs.git_user_email }}
+        run: |
+          git config user.name "$GIT_USER_NAME"
+          git config user.email "$GIT_USER_EMAIL"
+
+          git tag -a "$TAG_NAME" -m "Release version ${VERSION}"
           git push origin "$TAG_NAME"
 
-      # Wait until the pushed tag is visible on origin
+      # A release workflow triggered by this push reads the tag from origin, so
+      # the run waits for it rather than racing the propagation
       - name: Wait the tag creation
-        env:
-          TAG_NAME: ${{ env.TAG_NAME }}
+        if: env.TAG_EXISTS != 'true'
         run: |
-          if [ -z "$TAG_NAME" ]; then
-            echo "Error: TAG_NAME is empty"
-            exit 1
-          fi
-
-          echo "Waiting for tag propagation on origin: $TAG_NAME"
           for attempt in $(seq 1 60); do
-            if git ls-remote --tags origin "refs/tags/$TAG_NAME" | grep -q "refs/tags/$TAG_NAME$"; then
-              echo "Successfully created and verified remote tag: $TAG_NAME"
+            if git ls-remote --exit-code --tags origin "refs/tags/${TAG_NAME}" >/dev/null 2>&1; then
+              echo "Verified remote tag: ${TAG_NAME}"
               exit 0
             fi
 
-            echo "[$attempt/60] Tag is not visible on origin yet; retrying in 1s"
+            echo "[${attempt}/60] Tag is not visible on origin yet; retrying in 1s"
             sleep 1
           done
 
-          echo "Error: Timed out waiting for remote tag visibility: $TAG_NAME"
+          echo "Error: timed out waiting for remote tag: ${TAG_NAME}" >&2
           exit 1
