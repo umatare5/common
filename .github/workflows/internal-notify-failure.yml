@@ -2,7 +2,13 @@ name: Internal Notify Failure
 
 on:
   workflow_run:
-    workflows: ["Internal CodeQL Analysis", "Internal actionlint"]
+    workflows:
+      [
+        "Internal CodeQL Analysis",
+        "Internal actionlint",
+        "Internal markdownlint",
+        "Internal Link Check",
+      ]
     types: ["completed"]
 
 permissions:

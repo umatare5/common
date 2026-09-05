@@ -71,5 +71,5 @@ on:
 
 ## Related links
 
-- [GoReleaser build command](https://goreleaser.com/cmd/goreleaser_build/)
-- [GoReleaser check command](https://goreleaser.com/cmd/goreleaser_check/)
+- [GoReleaser build customization](https://goreleaser.com/customization/builds/)
+- [GoReleaser quick start](https://goreleaser.com/quick-start/)

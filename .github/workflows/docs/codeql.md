@@ -117,7 +117,7 @@ jobs:
       languages: '["go"]'
 ```
 
-## Auto-Detection features
+## Auto-detection features
 
 ### Configuration files
 

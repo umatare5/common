@@ -143,7 +143,7 @@ actionlint runs in **warning mode** by default:
 - Provides actionable insights without blocking CI/CD pipelines
 - Allows teams to incrementally improve workflow quality
 
-## Auto-Detection features
+## Auto-detection features
 
 ### Workflow files
 

@@ -29,6 +29,6 @@ Following my repositories use this repository as a submodule:
 
 I launched this project with the help of **Claude Code by Anthropic**, and I am grateful to the global developer community for their contributions to open source projects and public repositories.
 
-## License
+## Licence
 
 Please see the [LICENSE](./LICENSE) file for details.
