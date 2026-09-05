@@ -1,0 +1,77 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "customManagers": [
+    {
+      "description": "Reusable workflow input: go_version",
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github/workflows/.+\\.ya?ml$/"],
+      "matchStrings": [
+        "go_version:\\s*\"(?<currentValue>\\d+\\.\\d+(\\.\\d+)?)\""
+      ],
+      "depNameTemplate": "go",
+      "datasourceTemplate": "golang-version"
+    },
+    {
+      "description": "Reusable workflow input: golangci_lint_version",
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github/workflows/.+\\.ya?ml$/"],
+      "matchStrings": [
+        "golangci_lint_version:\\s*\"(?<currentValue>v\\d+\\.\\d+\\.\\d+)\""
+      ],
+      "depNameTemplate": "golangci/golangci-lint",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "description": "Reusable workflow input: goreleaser_version",
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github/workflows/.+\\.ya?ml$/"],
+      "matchStrings": [
+        "goreleaser_version:\\s*\"(?<currentValue>v\\d+\\.\\d+\\.\\d+)\""
+      ],
+      "depNameTemplate": "goreleaser/goreleaser",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "description": "Reusable workflow input: lychee_version",
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github/workflows/.+\\.ya?ml$/"],
+      "matchStrings": [
+        "lychee_version:\\s*\"(?<currentValue>v\\d+\\.\\d+\\.\\d+)\""
+      ],
+      "depNameTemplate": "lycheeverse/lychee",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^lychee-(?<version>v\\d+\\.\\d+\\.\\d+)$"
+    },
+    {
+      "description": "Reusable workflow input: promtool_version",
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github/workflows/.+\\.ya?ml$/"],
+      "matchStrings": [
+        "promtool_version:\\s*\"(?<currentValue>\\d+\\.\\d+\\.\\d+)\""
+      ],
+      "depNameTemplate": "prometheus/prometheus",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+)$"
+    },
+    {
+      "description": "Tool installed with go install inside a workflow: gotestsum",
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github/workflows/.+\\.ya?ml$/"],
+      "matchStrings": [
+        "go install gotest\\.tools/gotestsum@(?<currentValue>v\\d+\\.\\d+\\.\\d+)"
+      ],
+      "depNameTemplate": "gotest.tools/gotestsum",
+      "datasourceTemplate": "go"
+    },
+    {
+      "description": "Tool executed with go run inside a workflow: govulncheck",
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github/workflows/.+\\.ya?ml$/"],
+      "matchStrings": [
+        "golang\\.org/x/vuln/cmd/govulncheck@(?<currentValue>v\\d+\\.\\d+\\.\\d+)"
+      ],
+      "depNameTemplate": "golang.org/x/vuln",
+      "datasourceTemplate": "go"
+    }
+  ]
+}

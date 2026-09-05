@@ -1,9 +1,17 @@
 {
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "packageRules": [
     {
+      "description": "Label GitHub Actions updates. Digest pinning comes from helpers:pinGitHubActionDigests",
       "matchManagers": ["github-actions"],
-      "labels": ["Type: CI"],
-      "pinDigests": true
+      "addLabels": ["Type: CI"]
+    },
+    {
+      "description": "A digest change on a pinned patch tag means the tag was force-pushed, so review it by hand",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["digest"],
+      "automerge": false,
+      "groupName": null
     }
   ]
 }

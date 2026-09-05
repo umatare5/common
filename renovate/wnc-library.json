@@ -1,0 +1,15 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "packageRules": [
+    {
+      "description": "Review WNC SDK bumps by hand: they can change the values this repository emits. groupName is cleared so one held dependency cannot stop the whole batch from merging",
+      "matchPackageNames": [
+        "github.com/umatare5/cisco-ios-xe-wireless-go",
+        "github.com/umatare5/cisco-ios-xe-wireless-go/**"
+      ],
+      "automerge": false,
+      "groupName": null,
+      "addLabels": ["Update: SDK"]
+    }
+  ]
+}
