@@ -14,7 +14,6 @@
 
 - `.github/workflows/` — Reusable workflows. `internal-*.yml` run against this repository and are not published
 - `.github/workflows/docs/` — One guide per reusable workflow, listed in `.github/workflows/README.md`
-- `configs/` — Tool configuration copied into consuming repositories
 - `renovate/` — Renovate presets. `go.json` is the profile; the rest are components
 - `examples/` — Minimal projects the workflows are exercised against
 - `VERSION` — The tag a consumer pins. Changing it releases

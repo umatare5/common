@@ -12,7 +12,6 @@ The following directories are intended to be used from other repositories:
 | Directory            | Description                                        | Documentation                                 |
 | :------------------- | :------------------------------------------------- | :-------------------------------------------- |
 | `.github/workflows/` | Reusable GitHub Actions workflows.                 | 📖 [`README.md`](.github/workflows/README.md) |
-| `configs/`           | Configs for tools used in repository scaffolding.  | 📖 [`README.md`](configs/README.md)           |
 | `renovate/`          | Renovate configs for automated dependency updates. | 📖 [`README.md`](renovate/README.md)          |
 
 ## Repositories

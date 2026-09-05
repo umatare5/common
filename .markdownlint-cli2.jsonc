@@ -377,21 +377,6 @@
       }
     },
     {
-      "filter": ["configs/README.md"],
-      "combine": "merge",
-      "config": {
-        "MD043": {
-          "match_case": true,
-          "headings": [
-            "# Configuration Files",
-            "## Usage",
-            "*",
-            "## Available configurations"
-          ]
-        }
-      }
-    },
-    {
       "filter": ["examples/README.md"],
       "combine": "merge",
       "config": {
