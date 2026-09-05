@@ -21,10 +21,12 @@
 
 ## Setup and Commands
 
-- `actionlint -shellcheck=shellcheck .github/workflows/*.yml` — Lint every workflow
+- `make lint` — Run every linter
+- `make lint-workflows` — Check the workflows with actionlint and shellcheck
+- `make lint-docs` — Check Markdown and the links it carries
+- `make lint-renovate` — Validate the Renovate presets
+- `make pre-commit-install` — Install the hooks declared in `.pre-commit-config.yaml`
 - `pinact run --check` — Verify `uses:` pins and their version comments
-- `markdownlint-cli2 --config configs/.markdownlint-cli2.jsonc` — Lint Markdown
-- `npx --yes --package renovate@44 -- renovate-config-validator --strict renovate/*.json` — Validate the presets
 
 ## Code Style
 
