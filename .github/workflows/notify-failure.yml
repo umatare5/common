@@ -37,34 +37,38 @@ jobs:
     timeout-minutes: ${{ inputs.timeout_minutes }}
     permissions:
       issues: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPOSITORY: ${{ github.repository }}
+      ISSUE_TITLE: "Scheduled run failed: ${{ inputs.workflow_name }}"
     steps:
-      # A scheduled run has no pull request to surface its result on, so the
-      # failure is recorded as an issue. Reusing one issue per workflow keeps a
-      # recurring failure in a single thread instead of opening one every week.
-      - name: Open or update the tracking issue
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPOSITORY: ${{ github.repository }}
-          WORKFLOW_NAME: ${{ inputs.workflow_name }}
-          RUN_URL: ${{ inputs.run_url }}
+      # A scheduled run has no pull request to carry its result, so a failure
+      # opens an issue and a later one comments on it rather than opening a second.
+      - name: Find the tracking issue
+        id: find
         run: |
-          TITLE="Scheduled run failed: ${WORKFLOW_NAME}"
-          export TITLE
-
           number="$(gh issue list --repo "$REPOSITORY" --state open --limit 100 \
             --json number,title \
-            --jq 'map(select(.title == env.TITLE)) | first | .number // empty')"
+            --jq 'map(select(.title == env.ISSUE_TITLE)) | first | .number // empty')"
+          echo "number=${number}" >> "$GITHUB_OUTPUT"
 
-          if [ -n "$number" ]; then
-            gh issue comment "$number" --repo "$REPOSITORY" \
-              --body "The scheduled run failed again: ${RUN_URL}"
-            echo "Commented on issue #${number}"
-            exit 0
-          fi
+      - name: Comment on the tracking issue
+        if: steps.find.outputs.number != ''
+        env:
+          ISSUE_NUMBER: ${{ steps.find.outputs.number }}
+          RUN_URL: ${{ inputs.run_url }}
+        run: |
+          gh issue comment "$ISSUE_NUMBER" --repo "$REPOSITORY" \
+            --body "The scheduled run failed again: ${RUN_URL}"
 
-          body="$(printf '%s\n\n%s\n\n%s\n' \
-            "The scheduled run of \`${WORKFLOW_NAME}\` failed." \
-            "Run: ${RUN_URL}" \
-            "This issue is reused for every later failure of the same workflow. Close it once the workflow is green again.")"
+      - name: Open the tracking issue
+        if: steps.find.outputs.number == ''
+        env:
+          ISSUE_BODY: |
+            The scheduled run of `${{ inputs.workflow_name }}` failed.
 
-          gh issue create --repo "$REPOSITORY" --title "$TITLE" --body "$body"
+            Run: ${{ inputs.run_url }}
+
+            This issue is reused for every later failure of the same workflow. Close it once the workflow is green again.
+        run: |
+          gh issue create --repo "$REPOSITORY" --title "$ISSUE_TITLE" --body "$ISSUE_BODY"
