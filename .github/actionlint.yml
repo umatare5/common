@@ -17,4 +17,4 @@ config-variables: null
 paths:
   .github/workflows/**/*.yml:
     ignore:
-      - &ignore_shellcheck_2086 'shellcheck reported issue in this script: SC2086:.+'
+      - &ignore_shellcheck_2086 "shellcheck reported issue in this script: SC2086:.+"

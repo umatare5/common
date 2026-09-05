@@ -1,4 +1,4 @@
-# notify-failure Reusable Workflow
+# notify-workflow-failure Reusable Workflow
 
 A reusable GitHub Actions workflow for recording a failed scheduled run as an issue.
 
@@ -7,7 +7,7 @@ A reusable GitHub Actions workflow for recording a failed scheduled run as an is
 ### Basic usage
 
 ```yaml
-name: Notify Failure
+name: Notify Workflow Failure
 on:
   workflow_run:
     workflows: ["Coverage", "Test and Build"]
@@ -21,7 +21,7 @@ jobs:
     if: github.event.workflow_run.event == 'schedule' && github.event.workflow_run.conclusion == 'failure'
     permissions:
       issues: write
-    uses: umatare5/common/.github/workflows/notify-failure.yml@main
+    uses: umatare5/common/.github/workflows/notify-workflow-failure.yml@main
     with:
       workflow_name: ${{ github.event.workflow_run.name }}
       run_url: ${{ github.event.workflow_run.html_url }}

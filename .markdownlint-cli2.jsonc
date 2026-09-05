@@ -267,13 +267,13 @@
       }
     },
     {
-      "filter": [".github/workflows/docs/notify-failure.md"],
+      "filter": [".github/workflows/docs/notify-workflow-failure.md"],
       "combine": "merge",
       "config": {
         "MD043": {
           "match_case": true,
           "headings": [
-            "# notify-failure Reusable Workflow",
+            "# notify-workflow-failure Reusable Workflow",
             "## Usage",
             "*",
             "## Input parameters",

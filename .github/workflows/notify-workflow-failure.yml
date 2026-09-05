@@ -32,7 +32,7 @@ defaults:
 
 jobs:
   notify:
-    name: Notify Failure
+    name: Notify Workflow Failure
     runs-on: ${{ inputs.runs_on }}
     timeout-minutes: ${{ inputs.timeout_minutes }}
     permissions:
