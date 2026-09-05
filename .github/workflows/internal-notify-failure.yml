@@ -1,0 +1,19 @@
+name: Internal Notify Failure
+
+on:
+  workflow_run:
+    workflows: ["Internal CodeQL Analysis", "Sync Copilot Public Instructions"]
+    types: ["completed"]
+
+permissions:
+  contents: read
+
+jobs:
+  notify:
+    if: github.event.workflow_run.event == 'schedule' && github.event.workflow_run.conclusion == 'failure'
+    permissions:
+      issues: write
+    uses: ./.github/workflows/notify-failure.yml
+    with:
+      workflow_name: ${{ github.event.workflow_run.name }}
+      run_url: ${{ github.event.workflow_run.html_url }}

@@ -27,10 +27,12 @@ jobs:
 | [`go-test-coverage.yml`](./go-test-coverage.yml)           | Go coverage testing with thresholds                  | [📖 Guide](./docs/go-test-coverage.md)      |
 | [`go-test-fmt.yml`](./go-test-fmt.yml)                     | Go code formatting and quality checks                | [📖 Guide](./docs/go-test-fmt.md)           |
 | [`go-release.yml`](./go-release.yml)                       | Automated Go project releases                        | [📖 Guide](./docs/go-release.md)            |
+| [`go-release-snapshot.yml`](./go-release-snapshot.yml)     | GoReleaser config and cross-build check              | [📖 Guide](./docs/go-release-snapshot.md)   |
 | [`go-vulncheck.yml`](./go-vulncheck.yml)                   | Go vulnerability scan with govulncheck               | [📖 Guide](./docs/go-vulncheck.md)          |
 | [`markdownlint.yml`](./markdownlint.yml)                   | Markdown style checks with markdownlint-cli2         | [📖 Guide](./docs/markdownlint.md)          |
 | [`lychee.yml`](./lychee.yml)                               | Link check for Markdown and HTML documents           | [📖 Guide](./docs/lychee.md)                |
 | [`promtool.yml`](./promtool.yml)                           | Prometheus rule validation and unit testing          | [📖 Guide](./docs/promtool.md)              |
+| [`notify-failure.yml`](./notify-failure.yml)               | Issue notification for a failed scheduled run        | [📖 Guide](./docs/notify-failure.md)        |
 | [`tagging.yml`](./tagging.yml)                             | Automated Git tag creation from version files        | [📖 Guide](./docs/tagging.md)               |
 
 > [!Note]
