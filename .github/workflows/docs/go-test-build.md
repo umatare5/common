@@ -2,9 +2,9 @@
 
 A reusable GitHub Actions workflow for automated Go testing and binary build verification.
 
-## 🚀 Usage
+## Usage
 
-### Basic Usage
+### Basic usage
 
 ```yaml
 name: Test and Build
@@ -27,10 +27,10 @@ jobs:
       build_output_path: "./tmp/app"
 ```
 
-## ⚙️ Input Parameters
+## Input parameters
 
 | Parameter               | Type    | Description                                  | Default        |
-| ----------------------- | ------- | -------------------------------------------- | -------------- |
+| :---------------------- | :------ | :------------------------------------------- | :------------- |
 | `go_version`            | string  | Go version to use                            | `1.24.5`       |
 | `runs_on`               | string  | Runner to use for the job                    | `ubuntu-24.04` |
 | `fetch_depth`           | number  | Number of commits to fetch (0 = all history) | `1`            |
@@ -39,17 +39,17 @@ jobs:
 | `test_packages`         | string  | Test packages pattern                        | `./...`        |
 | `gotestsum_format`      | string  | gotestsum output format                      | `testname`     |
 | `enable_race_detection` | boolean | Enable race detection in tests               | `true`         |
-| `skip_build`            | boolean | Skip binary build and verification steps    | `false`        |
+| `skip_build`            | boolean | Skip binary build and verification steps     | `false`        |
 
-## 📝 Prerequisites
+## Prerequisites
 
 - Go project with valid `go.mod` file and test files
 - **For CLI applications**: Built binary should support `--version` and `--help` flags
 - **For libraries**: Use `skip_build: true` to skip binary build and verification steps
 
-## 📖 Advanced Usage
+## Advanced usage
 
-### 1. Custom Build Configuration
+### 1. Custom build configuration
 
 ```yaml
 jobs:
@@ -61,7 +61,7 @@ jobs:
       test_packages: "./internal/... ./pkg/..."
 ```
 
-### 2. Library Projects (Skip Build)
+### 2. Library projects (Skip build)
 
 ```yaml
 jobs:
@@ -72,7 +72,7 @@ jobs:
       test_packages: "./..."
 ```
 
-### 3. Performance Optimization
+### 3. Performance optimization
 
 ```yaml
 jobs:
@@ -84,7 +84,7 @@ jobs:
       runs_on: "ubuntu-latest"
 ```
 
-### 4. Parallel with Coverage Testing
+### 4. Parallel with coverage testing
 
 ```yaml
 jobs:
@@ -100,7 +100,7 @@ jobs:
     uses: umatare5/common/.github/workflows/go-test-fmt.yml@main
 ```
 
-## Related Links
+## Related links
 
 - [Go Testing Documentation](https://go.dev/doc/tutorial/add-a-test)
 - [gotestsum Documentation](https://github.com/gotestyourself/gotestsum)

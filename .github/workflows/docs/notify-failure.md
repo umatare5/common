@@ -2,9 +2,9 @@
 
 A reusable GitHub Actions workflow for recording a failed scheduled run as an issue.
 
-## 🚀 Usage
+## Usage
 
-### Basic Usage
+### Basic usage
 
 ```yaml
 name: Notify Failure
@@ -27,28 +27,28 @@ jobs:
       run_url: ${{ github.event.workflow_run.html_url }}
 ```
 
-> [!Note]
+> [!NOTE]
 >
 > `workflows` matches the `name` of a workflow, not its file name. Listing a name the repository does not define is harmless, so the same caller can be copied across repositories.
 
-## ⚙️ Input Parameters
+## Input parameters
 
 | Parameter         | Type   | Description                      | Default        |
-| ----------------- | ------ | -------------------------------- | -------------- |
+| :---------------- | :----- | :------------------------------- | :------------- |
 | `workflow_name`   | string | Name of the workflow that failed | required       |
 | `run_url`         | string | URL of the failed run            | required       |
 | `runs_on`         | string | Runner to use for the job        | `ubuntu-24.04` |
 | `timeout_minutes` | number | Job timeout in minutes           | `10`           |
 
-## 📝 Prerequisites
+## Prerequisites
 
 The calling job needs `issues: write`. Issues must be enabled on the repository.
 
 The workflow matches an open issue by its exact title `Scheduled run failed: <workflow_name>` among those `github-actions[bot]` opened, so a renamed issue no longer receives the next failure.
 
-## 📖 Advanced Usage
+## Advanced usage
 
-### 1. Covering Every Scheduled Workflow
+### 1. Covering every scheduled workflow
 
 A `workflow_run` trigger accepts several names, so one caller covers every scheduled workflow in the repository.
 
@@ -66,7 +66,7 @@ on:
     types: ["completed"]
 ```
 
-### 2. Notifying on Any Failure
+### 2. Notifying on any failure
 
 Drop the event check to include failures from `push` and `pull_request` runs. Those already surface on the pull request, so this trades a redundant notification for wider coverage.
 
@@ -76,7 +76,7 @@ jobs:
     if: github.event.workflow_run.conclusion == 'failure'
 ```
 
-## Related Links
+## Related links
 
 - [workflow_run event](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#workflow_run)
 - [GitHub CLI issue commands](https://cli.github.com/manual/gh_issue)

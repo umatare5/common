@@ -2,9 +2,9 @@
 
 A reusable GitHub Actions workflow for scanning a Go module against the Go vulnerability database with govulncheck.
 
-## 🚀 Usage
+## Usage
 
-### Basic Usage
+### Basic usage
 
 ```yaml
 name: govulncheck
@@ -22,14 +22,14 @@ jobs:
     uses: umatare5/common/.github/workflows/go-vulncheck.yml@main
 ```
 
-> [!Note]
+> [!NOTE]
 >
 > This is the only check here that covers the standard library and the toolchain. The GitHub Advisory Database carries no Go-ecosystem entry for either, so Dependabot reports neither.
 
-## ⚙️ Input Parameters
+## Input parameters
 
 | Parameter         | Type   | Description                                       | Default        |
-| ----------------- | ------ | ------------------------------------------------- | -------------- |
+| :---------------- | :----- | :------------------------------------------------ | :------------- |
 | `go_version`      | string | Go version to use (empty: read `go_version_file`) | `""`           |
 | `go_version_file` | string | File to read the Go toolchain from                | `go.mod`       |
 | `scan_packages`   | string | Package pattern to scan                           | `./...`        |
@@ -39,7 +39,7 @@ jobs:
 
 The govulncheck release is pinned in the workflow rather than taken as an input, so every caller scans with the same version and Renovate tracks it in one place.
 
-## 📝 Prerequisites
+## Prerequisites
 
 A `go.mod` at the repository root. The default reads the toolchain from it rather than from a version string, so a standard-library finding names the Go the repository actually declares.
 
@@ -47,9 +47,9 @@ That declared Go must be at or above the `go` directive of the pinned govulnchec
 
 A two-component directive such as `go 1.27` floats to the newest patch. An exact `go 1.25.2`, or a `toolchain` directive, pins that patch, and every later security release then shows as a finding until the directive is raised — which is the point.
 
-## 📖 Advanced Usage
+## Advanced usage
 
-### 1. Scheduling the Scan
+### 1. Scheduling the scan
 
 A new advisory affects a repository that has not changed, so the schedule is what turns the check red without a commit. The path filters keep it off the pull requests that touch no Go code.
 
@@ -65,7 +65,7 @@ on:
     - cron: "30 2 * * 1"
 ```
 
-### 2. Scanning a Subset
+### 2. Scanning a subset
 
 ```yaml
 jobs:
@@ -75,7 +75,7 @@ jobs:
       scan_packages: "./internal/..."
 ```
 
-### 3. Overriding the Toolchain
+### 3. Overriding the toolchain
 
 `go_version` takes precedence over `go_version_file`. Setting it scans a version other than the declared one, which is worth doing only to reproduce a finding.
 
@@ -87,7 +87,7 @@ jobs:
       go_version: "1.27.0"
 ```
 
-## Related Links
+## Related links
 
 - [govulncheck Documentation](https://pkg.go.dev/golang.org/x/vuln/cmd/govulncheck)
 - [Go Vulnerability Management](https://go.dev/doc/security/vuln/)

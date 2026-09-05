@@ -1,7 +1,7 @@
 # Repository Instructions
 
 > [!IMPORTANT]
-> Read [README.md](README.md) for what each directory publishes and how a consuming repository references it.
+> Read [`README.md`](README.md) for what each directory publishes and how a consuming repository references it.
 
 ## Tech Stack
 

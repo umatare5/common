@@ -2,9 +2,9 @@
 
 A reusable GitHub Actions workflow for validating Prometheus alerting and recording rules with promtool.
 
-## 🚀 Usage
+## Usage
 
-### Basic Usage
+### Basic usage
 
 ```yaml
 name: Rules
@@ -27,14 +27,14 @@ jobs:
         examples/prometheus_alert_rules_test.yml
 ```
 
-> [!Note]
+> [!NOTE]
 >
 > The workflow fails on a lint finding, because `promtool` prints `FAILED` and still exits `0` unless `--lint-fatal` is passed. Set `lint: "none"` to keep the syntax check while adopting the lint checks gradually.
 
-## ⚙️ Input Parameters
+## Input parameters
 
 | Parameter          | Type   | Description                                             | Default        |
-| ------------------ | ------ | ------------------------------------------------------- | -------------- |
+| :----------------- | :----- | :------------------------------------------------------ | :------------- |
 | `promtool_version` | string | Prometheus release to take promtool from                | `3.13.2`       |
 | `rule_files`       | string | Rule files to check (newline-separated)                 | required       |
 | `test_files`       | string | Rule unit test files to run (newline-separated)         | `""`           |
@@ -46,7 +46,7 @@ jobs:
 
 Pin `promtool_version` to the Prometheus you actually run, and raise it deliberately: a newer release can add a lint check that turns a green repository red without a local change.
 
-## 📝 Prerequisites
+## Prerequisites
 
 At least one rule file in your repository. Every list takes literal paths, one per line — promtool does not expand a glob and fails on one.
 
@@ -54,9 +54,9 @@ A test file, if given, follows the [rule unit test](https://prometheus.io/docs/p
 
 `runs_on` must name a Linux runner with GNU coreutils: the install step fetches the `linux-amd64` or `linux-arm64` archive and verifies it with `sha256sum --ignore-missing`.
 
-## 📖 Advanced Usage
+## Advanced usage
 
-### 1. Unit Testing the Rules
+### 1. Unit testing the rules
 
 `check rules` reports malformed rules only. A rule whose expression is valid but selects the wrong series passes it, and so does a typo in a metric name. `test rules` evaluates the rules against series you supply, so it is the check that holds an expression to its intended result.
 
@@ -72,7 +72,7 @@ jobs:
         examples/alert_rules_test.yml
 ```
 
-### 2. Checking the Scrape Configuration
+### 2. Checking the scrape configuration
 
 `check config` validates each rule file its `rule_files` sections name, not only the path, so a malformed rule there fails this step too. A `rule_files` pattern that matches nothing passes silently, which is the normal state for a config shipped with those entries commented out.
 
@@ -99,7 +99,7 @@ jobs:
         examples/alert_rules.yml
 ```
 
-## Related Links
+## Related links
 
 - [promtool Documentation](https://prometheus.io/docs/prometheus/latest/command-line/promtool/)
 - [Recording and Alerting Rules](https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/)

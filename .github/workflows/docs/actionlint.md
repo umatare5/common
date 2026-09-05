@@ -2,9 +2,9 @@
 
 A reusable GitHub Actions workflow for automated validation and linting of GitHub Actions workflow files using actionlint.
 
-## 🚀 Usage
+## Usage
 
-### Basic Usage
+### Basic usage
 
 ```yaml
 name: Actionlint
@@ -15,7 +15,7 @@ jobs:
     uses: umatare5/common/.github/workflows/actionlint.yml@main
 ```
 
-### Advanced Usage with Custom Configuration
+### Advanced usage with custom configuration
 
 ```yaml
 name: Actionlint
@@ -29,25 +29,25 @@ jobs:
       workflow_pattern: ".github/workflows/*.yml"
 ```
 
-## ⚙️ Input Parameters
+## Input parameters
 
 | Parameter          | Type   | Description                                  | Default            |
-| ------------------ | ------ | -------------------------------------------- | ------------------ |
+| :----------------- | :----- | :------------------------------------------- | :----------------- |
 | `checkout-ref`     | string | The branch, tag or SHA to checkout           | `""`               |
 | `runs_on`          | string | Runner to use for the job                    | `"ubuntu-24.04"`   |
 | `fetch_depth`      | number | Number of commits to fetch (0 = all history) | `1`                |
 | `workflow_pattern` | string | Pattern for workflow files to check          | `""` (auto-detect) |
 | `config_file`      | string | Path to actionlint config file               | `""` (auto-detect) |
 
-## 📝 Prerequisites
+## Prerequisites
 
 - Repository with GitHub Actions workflow files in `.github/workflows/`
 - Optional: Create `.github/actionlint.yml` for custom configuration (automatically detected)
 - Optional: Specify custom workflow patterns for targeted validation
 
-## 📖 Advanced Usage
+## Advanced usage
 
-### 1. Custom Configuration File
+### 1. Custom configuration file
 
 ```yaml
 jobs:
@@ -57,7 +57,7 @@ jobs:
       config_file: ".github/custom-actionlint.yml"
 ```
 
-### 2. Specific Workflow Pattern
+### 2. Specific workflow pattern
 
 ```yaml
 jobs:
@@ -67,7 +67,7 @@ jobs:
       workflow_pattern: ".github/workflows/ci-*.yml"
 ```
 
-### 3. Specific Branch/Tag Analysis
+### 3. Specific branch/Tag analysis
 
 ```yaml
 jobs:
@@ -78,7 +78,7 @@ jobs:
       fetch_depth: 0
 ```
 
-### 4. Custom Runner
+### 4. Custom runner
 
 ```yaml
 jobs:
@@ -88,7 +88,7 @@ jobs:
       runs_on: "ubuntu-latest"
 ```
 
-## 🔧 Configuration File
+## Configuration file
 
 actionlint automatically detects `.github/actionlint.yml` in your repository. You can also specify a custom configuration file:
 
@@ -119,11 +119,11 @@ ignore:
   - "shellcheck reported issue in this script"
 ```
 
-### Default Detection
+### Default detection
 
 actionlint automatically searches for `.github/actionlint.yml` in your repository root. No configuration is needed for the default behavior.
 
-### Custom Configuration
+### Custom configuration
 
 ```yaml
 # Example: .github/custom-actionlint.yml
@@ -134,7 +134,7 @@ jobs:
       config_file: ".github/custom-actionlint.yml"
 ```
 
-## 🛠️ Execution Mode
+## Execution mode
 
 actionlint runs in **warning mode** by default:
 
@@ -143,47 +143,47 @@ actionlint runs in **warning mode** by default:
 - Provides actionable insights without blocking CI/CD pipelines
 - Allows teams to incrementally improve workflow quality
 
-## 🎯 Auto-Detection Features
+## Auto-Detection features
 
-### Workflow Files
+### Workflow files
 
 - **Default**: Automatically scans `.github/workflows/` directory
 - **Custom**: Specify patterns like `.github/workflows/ci-*.yml`
 
-### Configuration Files
+### Configuration files
 
 - **Default**: Automatically detects `.github/actionlint.yml`
 - **Custom**: Specify alternative config file paths
 
-## 📊 What actionlint Checks
+## What actionlint checks
 
 actionlint performs comprehensive validation including:
 
-### Syntax and Structure
+### Syntax and structure
 
 - YAML syntax validation
 - Workflow file structure validation
 - Job and step configuration validation
 
-### GitHub Actions Best Practices
+### GitHub Actions best practices
 
 - Action usage validation
 - Runner label validation
 - Expression syntax validation
 - Context usage validation
 
-### Security Checks
+### Security checks
 
 - Script injection vulnerabilities
 - Untrusted input handling
 - Permission requirements
 
-### External Tool Integration
+### External tool integration
 
 - **shellcheck**: Shell script validation in `run` steps
 - **pyflakes**: Python script validation in `run` steps
 
-## 🔍 Common Issues Detected
+## Common issues detected
 
 - Invalid action references
 - Typos in runner labels
@@ -193,7 +193,7 @@ actionlint performs comprehensive validation including:
 - Deprecated action versions
 - Invalid workflow triggers
 
-## 📈 Example Output
+## Example output
 
 ```text
 ✓ Using default config: .github/actionlint.yml
@@ -203,7 +203,7 @@ Running actionlint to check GitHub Actions workflow files...
 Issues found in workflow files - please review and fix manually
 ```
 
-## Related Links
+## Related links
 
 - [actionlint GitHub Repository](https://github.com/rhysd/actionlint)
 - [actionlint Documentation](https://github.com/rhysd/actionlint/tree/main/docs)

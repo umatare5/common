@@ -2,9 +2,9 @@
 
 A reusable GitHub Actions workflow for automated Go code formatting and quality checks.
 
-## 🚀 Usage
+## Usage
 
-### Basic Usage
+### Basic usage
 
 ```yaml
 name: Format and Lint
@@ -26,10 +26,10 @@ jobs:
       golangci_lint_version: "v1.64.8"
 ```
 
-## ⚙️ Input Parameters
+## Input parameters
 
 | Parameter               | Type    | Description                                  | Default                             |
-| ----------------------- | ------- | -------------------------------------------- | ----------------------------------- |
+| :---------------------- | :------ | :------------------------------------------- | :---------------------------------- |
 | `go_version`            | string  | Go version to use                            | `1.24.5`                            |
 | `golangci_lint_version` | string  | golangci-lint version to use                 | `v1.64.8`                           |
 | `golangci_lint_config`  | string  | golangci-lint config file path               | `.golangci.yml`                     |
@@ -40,13 +40,13 @@ jobs:
 | `enable_cache`          | boolean | Enable golangci-lint cache                   | `true`                              |
 | `cache_key_suffix`      | string  | Additional suffix for cache key              | `""`                                |
 
-## 📝 Prerequisites
+## Prerequisites
 
 Create an optional `.golangci.yml` file in your repository root.
 
-## 📖 Advanced Usage
+## Advanced usage
 
-### 1. Custom Configuration
+### 1. Custom configuration
 
 ```yaml
 jobs:
@@ -58,7 +58,7 @@ jobs:
       timeout: "15m"
 ```
 
-### 2. Combined with Testing
+### 2. Combined with testing
 
 ```yaml
 jobs:
@@ -74,7 +74,7 @@ jobs:
     uses: umatare5/common/.github/workflows/go-test-coverage.yml@main
 ```
 
-### 3. Performance Optimization
+### 3. Performance optimization
 
 ```yaml
 jobs:
@@ -88,7 +88,7 @@ jobs:
       cache_key_suffix: "-custom"
 ```
 
-## Related Links
+## Related links
 
 - [golangci-lint Documentation](https://golangci-lint.run/)
 - [golangci-lint Configuration](https://golangci-lint.run/usage/configuration/)

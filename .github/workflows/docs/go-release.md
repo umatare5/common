@@ -2,9 +2,9 @@
 
 A reusable GitHub Actions workflow for automating Go project releases.
 
-## 🚀 Usage
+## Usage
 
-### Basic Usage
+### Basic usage
 
 ```yaml
 name: Release
@@ -26,10 +26,10 @@ jobs:
       goreleaser_version: "v2.11.1"
 ```
 
-## ⚙️ Input Parameters
+## Input parameters
 
 | Parameter                 | Type    | Description                                  | Default           |
-| ------------------------- | ------- | -------------------------------------------- | ----------------- |
+| :------------------------ | :------ | :------------------------------------------- | :---------------- |
 | `go_version`              | string  | Go version to use                            | `1.24.5`          |
 | `goreleaser_version`      | string  | GoReleaser version to use                    | `latest`          |
 | `goreleaser_args`         | string  | Arguments to pass to GoReleaser              | `release --clean` |
@@ -39,13 +39,13 @@ jobs:
 | `registry`                | string  | Container registry to use                    | `ghcr.io`         |
 | `goreleaser_distribution` | string  | GoReleaser distribution                      | `goreleaser`      |
 
-## 📋 Prerequisites
+## Prerequisites
 
 Create an optional `.goreleaser.yml` file in your repository root.
 
-## 📖 Advanced Usage
+## Advanced usage
 
-### 1. Performance Optimization
+### 1. Performance optimization
 
 ```yaml
 jobs:
@@ -57,7 +57,7 @@ jobs:
       goreleaser_version: "v2.11.1"
 ```
 
-### 2. Custom Configuration
+### 2. Custom configuration
 
 ```yaml
 jobs:
@@ -69,7 +69,7 @@ jobs:
       registry: "docker.io"
 ```
 
-### 3. Combined with Testing
+### 3. Combined with testing
 
 ```yaml
 jobs:
@@ -89,7 +89,7 @@ jobs:
       goreleaser_version: "v2.11.1"
 ```
 
-## Related Links
+## Related links
 
 - [GoReleaser Documentation](https://goreleaser.com/)
 - [GoReleaser Configuration](https://goreleaser.com/customization/)

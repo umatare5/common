@@ -1,4 +1,4 @@
-# 🔄 Renovate Configuration Files
+# Renovate Configuration Files
 
 Common Renovate configuration files for automated dependency management across projects.
 
@@ -16,20 +16,20 @@ Extend a profile from your `renovate.json`. A profile already pulls in the compo
 
 Keep a rule here once two or more repositories share it. A rule used by a single repository belongs in that repository's `renovate.json`.
 
-## Available Configurations
+## Available configurations
 
 | File                                                 | Type      | Description                                    |
-| ---------------------------------------------------- | --------- | ---------------------------------------------- |
+| :--------------------------------------------------- | :-------- | :--------------------------------------------- |
 | [`go.json`](./go.json)                               | Profile   | Go repositories. Extends every component       |
 | [`default.json`](./default.json)                     | Component | Schedule, automerge, cooldown and labels       |
 | [`github-actions.json`](./github-actions.json)       | Component | Rules for GitHub Actions workflow updates      |
 | [`workflow-versions.json`](./workflow-versions.json) | Component | Tool versions passed to the reusable workflows |
 | [`wnc-library.json`](./wnc-library.json)             | Add-on    | Holds WNC SDK bumps for manual review          |
 
-## Update Policy
+## Update policy
 
 | Item           | Value                                      |
-| -------------- | ------------------------------------------ |
+| :------------- | :----------------------------------------- |
 | PR creation    | Monday, 12:00-21:00 JST                    |
 | Automerge      | Thursday, 12:00-21:00 JST, minor and below |
 | Major updates  | Manual merge                               |

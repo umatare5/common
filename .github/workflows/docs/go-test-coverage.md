@@ -2,9 +2,9 @@
 
 A reusable GitHub Actions workflow for automated Go coverage testing with configurable thresholds.
 
-## 🚀 Usage
+## Usage
 
-### Basic Usage
+### Basic usage
 
 ```yaml
 name: Coverage
@@ -26,10 +26,10 @@ jobs:
       coverage_threshold: 80
 ```
 
-## ⚙️ Input Parameters
+## Input parameters
 
 | Parameter                  | Type    | Description                                         | Default          |
-| -------------------------- | ------- | --------------------------------------------------- | ---------------- |
+| :------------------------- | :------ | :-------------------------------------------------- | :--------------- |
 | `go_version`               | string  | Go version to use                                   | `1.24.5`         |
 | `coverage_threshold`       | number  | Minimum coverage percentage required                | `80`             |
 | `coverage_file`            | string  | Coverage output file path                           | `./coverage.out` |
@@ -40,13 +40,13 @@ jobs:
 | `enable_race_detection`    | boolean | Enable race detection in tests                      | `true`           |
 | `coverage_exclude_pattern` | string  | Regular expression pattern to exclude from coverage | `""`             |
 
-## 📝 Prerequisites
+## Prerequisites
 
 - Go project with valid `go.mod` file and test files
 
-## 📖 Advanced Usage
+## Advanced usage
 
-### 1. High Coverage Requirements
+### 1. High coverage requirements
 
 ```yaml
 jobs:
@@ -57,7 +57,7 @@ jobs:
       test_packages: "./internal/... ./pkg/..."
 ```
 
-### 2. Performance Optimization
+### 2. Performance optimization
 
 ```yaml
 jobs:
@@ -68,7 +68,7 @@ jobs:
       gotestsum_format: "short"
 ```
 
-### 3. Excluding Files/Directories from Coverage
+### 3. Excluding files/Directories from coverage
 
 ```yaml
 jobs:
@@ -79,7 +79,7 @@ jobs:
       coverage_exclude_pattern: "(vendor/|_test\\.go:|mock.*\\.go:|.*\\.pb\\.go:)"
 ```
 
-### 4. Parallel with Other Workflows
+### 4. Parallel with other workflows
 
 ```yaml
 jobs:
@@ -95,46 +95,43 @@ jobs:
     uses: umatare5/common/.github/workflows/go-test-fmt.yml@main
 ```
 
-## 🎯 Coverage Exclusion Patterns
+## Coverage exclusion patterns
 
 The `coverage_exclude_pattern` parameter accepts regular expressions to exclude specific files or directories from coverage calculation. This is useful for excluding generated code, vendor dependencies, or test files.
 
-### Common Exclusion Examples
+### Common exclusion examples
 
-#### Exclude Test Files and Vendor Directory
+#### Exclude test files and vendor directory
 
 ```yaml
 coverage_exclude_pattern: "(vendor/|_test\\.go:)"
 ```
 
-#### Exclude Generated and Mock Files
+#### Exclude generated and mock files
 
 ```yaml
 coverage_exclude_pattern: "(.*\\.pb\\.go:|mock.*\\.go:)"
 ```
 
-#### Exclude Specific Directories
+#### Exclude specific directories
 
 ```yaml
 coverage_exclude_pattern: "(cmd/|scripts/|examples/|docs/)"
 ```
 
-#### Complex Exclusion Pattern
+#### Complex exclusion pattern
 
 ```yaml
 coverage_exclude_pattern: "(vendor/|_test\\.go:|mock.*\\.go:|.*\\.pb\\.go:|cmd/|examples/|internal/testdata/)"
 ```
 
-### How Coverage Exclusion Works
+### How coverage exclusion works
 
-1. **Test Execution**: Tests run normally with full coverage profiling
-2. **Pattern Filtering**: If `coverage_exclude_pattern` is provided, the workflow:
-   - Preserves the coverage profile header
-   - Removes lines matching the regular expression pattern
-   - Uses the filtered data for threshold validation
-3. **Threshold Check**: Coverage percentage is calculated from the filtered data
+1. **Test execution**: Tests run with full coverage profiling.
+2. **Pattern filtering**: The workflow keeps the profile header, drops the lines the regular expression matches, and passes the remainder on. The header names the coverage mode, so a filter that removed it would leave the profile unreadable.
+3. **Threshold check**: The percentage is calculated from the filtered data rather than from the original profile.
 
-## Related Links
+## Related links
 
 - [Go Testing Documentation](https://go.dev/doc/tutorial/add-a-test)
 - [gotestsum Documentation](https://github.com/gotestyourself/gotestsum)
