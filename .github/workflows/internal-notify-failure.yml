@@ -2,7 +2,7 @@ name: Internal Notify Failure
 
 on:
   workflow_run:
-    workflows: ["Internal CodeQL Analysis", "Sync Copilot Public Instructions"]
+    workflows: ["Internal CodeQL Analysis", "Internal actionlint"]
     types: ["completed"]
 
 permissions:

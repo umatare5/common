@@ -12,10 +12,7 @@ The following directories are intended to be used from other repositories:
 | Directory               | Description                                        | Documentation                                  |
 | ----------------------- | -------------------------------------------------- | ---------------------------------------------- |
 | `.github/workflows/`    | Reusable GitHub Actions workflows.                 | 📖 [README.md](.github/workflows/README.md)    |
-| `.github/instructions/` | Instructions for GitHub Copilot Agent Mode.        | 📖 [README.md](.github/instructions/README.md) |
 | `configs/`              | Configs for tools used in repository scaffolding.  | 📖 [README.md](configs/README.md)              |
-| `instructions/`         | Additional instructions for GitHub Copilot.        | 📝 Files downloadable via workflow             |
-| `prompts/`              | Prompt templates for GitHub Copilot.               | 📝 Files downloadable via workflow             |
 | `renovate/`             | Renovate configs for automated dependency updates. | 📖 [README.md](renovate/README.md)             |
 
 ## Repositories
@@ -28,9 +25,9 @@ Following my repositories use this repository as a submodule:
 - 📡 [umatare5/wnc](https://github.com/umatare5/wnc)
 - 💻️ [umatare5/telee](https://github.com/umatare5/telee)
 
-## Acknowledgments
+## Acknowledgement
 
-This code was developed with the assistance of **GitHub Copilot Agent Mode**. I'd like to express sincere gratitude to the global developer community for sharing their knowledge, code, and expertise through open source projects and public repositories.
+I launched this project with the help of **Claude Code by Anthropic**, and I am grateful to the global developer community for their contributions to open source projects and public repositories.
 
 ## License
 
