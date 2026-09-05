@@ -21,13 +21,11 @@ Following my repositories use this repository as a submodule:
 
 - 🌐 [umatare5/controld-exporter](https://github.com/umatare5/controld-exporter)
 - 💹 [umatare5/twelvedata-exporter](https://github.com/umatare5/twelvedata-exporter)
+- 📈 [umatare5/cisco-wnc-exporter](https://github.com/umatare5/cisco-wnc-exporter)
+- 🔀 [umatare5/xflow-exporter](https://github.com/umatare5/xflow-exporter)
 - 📗 [umatare5/cisco-ios-xe-wireless-go](https://github.com/umatare5/cisco-ios-xe-wireless-go)
 - 📡 [umatare5/wnc](https://github.com/umatare5/wnc)
 - 💻️ [umatare5/telee](https://github.com/umatare5/telee)
-
-## Acknowledgement
-
-I launched this project with the help of **Claude Code by Anthropic**, and I am grateful to the global developer community for their contributions to open source projects and public repositories.
 
 ## License
 
