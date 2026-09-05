@@ -1,5 +1,2 @@
 # Temporary files
 tmp/
-
-# Worktrees created by git-wt
-.wt/
