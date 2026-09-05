@@ -44,7 +44,7 @@ jobs:
 
 The calling job needs `issues: write`. Issues must be enabled on the repository.
 
-The workflow reuses one issue per `workflow_name`, matching on the exact title `Scheduled run failed: <workflow_name>`. Renaming the issue makes the next failure open a new one.
+The workflow matches an open issue by its exact title `Scheduled run failed: <workflow_name>` among those `github-actions[bot]` opened, so a renamed issue no longer receives the next failure.
 
 ## 📖 Advanced Usage
 

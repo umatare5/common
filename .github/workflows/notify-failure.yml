@@ -48,7 +48,7 @@ jobs:
         id: find
         run: |
           number="$(gh issue list --repo "$REPOSITORY" --state open --limit 100 \
-            --json number,title \
+            --author "github-actions[bot]" --json number,title \
             --jq 'map(select(.title == env.ISSUE_TITLE)) | first | .number // empty')"
           echo "number=${number}" >> "$GITHUB_OUTPUT"
 
