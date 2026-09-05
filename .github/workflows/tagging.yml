@@ -36,9 +36,12 @@ on:
 jobs:
   update-tag:
     runs-on: ${{ inputs.runs_on }}
+    permissions:
+      contents: write
 
     steps:
-      # Checkout the code repository to access version files and git history
+      # The credentials stay in .git/config because the push below needs them;
+      # every other workflow here sets persist-credentials: false
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 

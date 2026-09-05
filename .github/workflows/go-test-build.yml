@@ -58,6 +58,8 @@ jobs:
   test:
     name: Test and Build
     runs-on: ${{ inputs.runs_on }}
+    permissions:
+      contents: read
 
     steps:
       # Checkout the code repository to access source files and dependencies
@@ -82,7 +84,11 @@ jobs:
 
       # Run static analysis tool to detect potential issues in Go code
       - name: Run go vet
-        run: go vet ${{ inputs.test_packages }}
+        env:
+          TEST_PACKAGES: ${{ inputs.test_packages }}
+        run: |
+          read -r -a packages <<<"$TEST_PACKAGES"
+          go vet "${packages[@]}"
 
       # Install gotestsum for enhanced test output formatting and reporting
       - name: Install gotestsum
@@ -90,24 +96,39 @@ jobs:
 
       # Execute unit tests with optional race detection for concurrent code safety
       - name: Run tests
+        env:
+          RACE: ${{ inputs.enable_race_detection }}
+          FORMAT: ${{ inputs.gotestsum_format }}
+          TEST_PACKAGES: ${{ inputs.test_packages }}
         run: |
-          if [ "${{ inputs.enable_race_detection }}" = "true" ]; then
-            gotestsum --format ${{ inputs.gotestsum_format }} -- -race ${{ inputs.test_packages }}
-          else
-            gotestsum --format ${{ inputs.gotestsum_format }} -- ${{ inputs.test_packages }}
+          args=(--format "$FORMAT" --)
+          if [ "$RACE" = "true" ]; then
+            args+=(-race)
           fi
+
+          read -r -a packages <<<"$TEST_PACKAGES"
+          gotestsum "${args[@]}" "${packages[@]}"
 
       # Compile the Go application into an executable binary
       - name: Build binary
         if: ${{ !inputs.skip_build }}
-        run: go build -o ${{ inputs.build_output_path }} ${{ inputs.build_cmd_path }}
+        env:
+          OUTPUT_PATH: ${{ inputs.build_output_path }}
+          CMD_PATH: ${{ inputs.build_cmd_path }}
+        run: go build -o "$OUTPUT_PATH" "$CMD_PATH"
 
       # Verify the built binary supports version flag and displays version information
       - name: Verify binary version
         if: ${{ !inputs.skip_build }}
-        run: ${{ inputs.build_output_path }} --version
+        env:
+          OUTPUT_PATH: ${{ inputs.build_output_path }}
+        run: |
+          "$OUTPUT_PATH" --version
 
       # Verify the built binary supports help flag and displays usage information
       - name: Verify binary help
         if: ${{ !inputs.skip_build }}
-        run: ${{ inputs.build_output_path }} --help
+        env:
+          OUTPUT_PATH: ${{ inputs.build_output_path }}
+        run: |
+          "$OUTPUT_PATH" --help
