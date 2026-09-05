@@ -1,0 +1,81 @@
+name: Reusable Go Release Snapshot Workflow
+
+# Required permissions for calling workflow:
+# permissions:
+#   contents: read       # For checking out code
+
+on:
+  workflow_call:
+    inputs:
+      go_version:
+        description: "Go version to use"
+        required: false
+        type: string
+        default: "1.24.5"
+      goreleaser_version:
+        description: "GoReleaser version to use"
+        required: false
+        type: string
+        default: "latest"
+      goreleaser_distribution:
+        description: "GoReleaser distribution"
+        required: false
+        type: string
+        default: "goreleaser"
+      runs_on:
+        description: "Runner to use for the job"
+        required: false
+        type: string
+        default: "ubuntu-24.04"
+      fetch_depth:
+        description: "Number of commits to fetch (0 = all history)"
+        required: false
+        type: number
+        default: 0
+      timeout_minutes:
+        description: "Job timeout in minutes"
+        required: false
+        type: number
+        default: 20
+
+defaults:
+  run:
+    shell: bash -euo pipefail {0}
+
+jobs:
+  snapshot:
+    name: Build Snapshot
+    runs-on: ${{ inputs.runs_on }}
+    timeout-minutes: ${{ inputs.timeout_minutes }}
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: ${{ inputs.fetch_depth }}
+          persist-credentials: false
+
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: ${{ inputs.go_version }}
+
+      # A release run reaches the configuration only after a tag exists, so a
+      # schema change introduced by a GoReleaser bump would surface at release
+      # time. Checking it here moves that failure off the release path.
+      - name: Validate GoReleaser configuration
+        uses: goreleaser/goreleaser-action@f06c13b6b1a9625abc9e6e439d9c05a8f2190e94 # v7.2.3
+        with:
+          distribution: ${{ inputs.goreleaser_distribution }}
+          version: ${{ inputs.goreleaser_version }}
+          args: check
+
+      # Every cross-compilation target is built without producing a tag or
+      # publishing anything, which is the part regular CI does not cover
+      - name: Build snapshot
+        uses: goreleaser/goreleaser-action@f06c13b6b1a9625abc9e6e439d9c05a8f2190e94 # v7.2.3
+        with:
+          distribution: ${{ inputs.goreleaser_distribution }}
+          version: ${{ inputs.goreleaser_version }}
+          args: build --snapshot --clean
