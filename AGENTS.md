@@ -36,7 +36,7 @@
 - Pin every `uses:` to a full-length SHA with the version in a trailing comment
 - Name every step for what it does to the repository rather than for the tool it runs
 
-## Testing Instructions
+## Testing
 
 - A reusable workflow is verified by an `internal-*.yml` caller in this repository, not by a unit test
 - `examples/go-server` is the fixture the Go workflows build and test against
