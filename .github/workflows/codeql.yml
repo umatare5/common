@@ -35,6 +35,10 @@ jobs:
   analyze:
     name: Analyze
     runs-on: ${{ inputs.runs_on }}
+    permissions:
+      contents: read
+      packages: read
+      security-events: write
 
     strategy:
       fail-fast: false

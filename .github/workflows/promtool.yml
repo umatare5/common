@@ -54,6 +54,9 @@ jobs:
     timeout-minutes: ${{ inputs.timeout_minutes }}
     permissions:
       contents: read
+    env:
+      PROMTOOL_BASE_URL: https://github.com/prometheus/prometheus/releases/download/v${{ inputs.promtool_version }}
+      PROMTOOL_BINDIR: ${{ github.workspace }}/.promtool-bin
     steps:
       # Checkout the code repository to access the rule, test and config files
       - name: Checkout
@@ -62,9 +65,9 @@ jobs:
           fetch-depth: ${{ inputs.fetch_depth }}
           persist-credentials: false
 
-      # Install promtool from the pinned Prometheus release, verifying the archive
-      # against the checksum file the release publishes beside it
-      - name: Install promtool
+      # The release publishes one archive per architecture, so the runner decides
+      # which name to fetch
+      - name: Resolve the promtool release asset
         env:
           PROMTOOL_VERSION: ${{ inputs.promtool_version }}
         run: |
@@ -74,47 +77,49 @@ jobs:
             *) echo "Unsupported architecture: $(uname -m)" >&2 && exit 1 ;;
           esac
 
-          name="prometheus-${PROMTOOL_VERSION}.linux-${arch}"
-          base_url="https://github.com/prometheus/prometheus/releases/download/v${PROMTOOL_VERSION}"
-          bindir="${RUNNER_TEMP}/promtool"
+          echo "PROMTOOL_ASSET=prometheus-${PROMTOOL_VERSION}.linux-${arch}" >>"$GITHUB_ENV"
 
-          mkdir -p "${bindir}"
-          cd "${bindir}"
-          curl -fsSL "${base_url}/${name}.tar.gz" -o "${name}.tar.gz"
-          curl -fsSL "${base_url}/sha256sums.txt" -o "sha256sums.txt"
-          sha256sum --ignore-missing --check "sha256sums.txt"
+      # The checksum file covers every asset in the release, so --ignore-missing
+      # limits the check to the one archive downloaded here
+      - name: Download and verify promtool
+        run: |
+          mkdir -p "$PROMTOOL_BINDIR"
+          cd "$PROMTOOL_BINDIR"
+          curl -fsSL "${PROMTOOL_BASE_URL}/${PROMTOOL_ASSET}.tar.gz" -o "${PROMTOOL_ASSET}.tar.gz"
+          curl -fsSL "${PROMTOOL_BASE_URL}/sha256sums.txt" -o sha256sums.txt
+          sha256sum --ignore-missing --check sha256sums.txt
 
-          tar -xzf "${name}.tar.gz" --strip-components=1 "${name}/promtool"
-          echo "${bindir}" >> "$GITHUB_PATH"
-          ./promtool --version
+      - name: Install promtool
+        run: |
+          tar -xzf "${PROMTOOL_BINDIR}/${PROMTOOL_ASSET}.tar.gz" -C "$PROMTOOL_BINDIR" \
+            --strip-components=1 "${PROMTOOL_ASSET}/promtool"
+          echo "$PROMTOOL_BINDIR" >>"$GITHUB_PATH"
+          "${PROMTOOL_BINDIR}/promtool" --version
 
       # Check the rule files for syntax and for the lint findings promtool reports.
       # --lint-fatal is required: without it a lint finding prints FAILED and the
       # command still exits 0, so the step would pass while reporting a problem.
+      # An unrecognised lint value is reported as a warning and leaves linting
+      # off, so it is rejected before promtool runs
+      - name: Validate the rule check inputs
+        env:
+          RULE_FILES: ${{ inputs.rule_files }}
+          LINT: ${{ inputs.lint }}
+        run: |
+          case "$LINT" in
+            all | duplicate-rules | none) ;;
+            *) echo "lint must be all, duplicate-rules or none" >&2 && exit 1 ;;
+          esac
+
+          [[ -n "${RULE_FILES//[[:space:]]/}" ]] || { echo "rule_files listed no file" >&2; exit 1; }
+
       - name: Check rules
         env:
           RULE_FILES: ${{ inputs.rule_files }}
           LINT: ${{ inputs.lint }}
         run: |
-          # An unrecognised value is reported as a warning and leaves linting off,
-          # so it is rejected here rather than passed through
-          case "${LINT}" in
-            all | duplicate-rules | none) ;;
-            *) echo "lint must be all, duplicate-rules or none" >&2 && exit 1 ;;
-          esac
-
-          files=()
-          while IFS= read -r f; do
-            [[ -z "${f}" ]] && continue
-            files+=("${f}")
-          done <<< "${RULE_FILES}"
-
-          if [[ "${#files[@]}" -eq 0 ]]; then
-            echo "rule_files listed no file" >&2
-            exit 1
-          fi
-
-          promtool check rules --lint "${LINT}" --lint-fatal "${files[@]}"
+          readarray -t files < <(grep -v '^[[:space:]]*$' <<<"$RULE_FILES")
+          promtool check rules --lint "$LINT" --lint-fatal "${files[@]}"
 
       # Run the rule unit tests. This is the only check that evaluates a rule against
       # series, so it is the one that catches an expression selecting the wrong set
@@ -124,24 +129,16 @@ jobs:
         env:
           TEST_FILES: ${{ inputs.test_files }}
         run: |
-          files=()
-          while IFS= read -r f; do
-            [[ -z "${f}" ]] && continue
-            files+=("${f}")
-          done <<< "${TEST_FILES}"
-
+          readarray -t files < <(grep -v '^[[:space:]]*$' <<<"$TEST_FILES")
           promtool test rules "${files[@]}" 2>&1 | tee "${RUNNER_TEMP}/promtool-test.log"
 
-          # A test file whose own rule_files entry matches nothing is reported as a
-          # warning and still exits 0, which passes every assertion against no rules
+          # A test file whose own rule_files entry matches nothing is reported as
+          # a warning and still exits 0, passing every assertion against no rules
           if grep -q "no file match pattern" "${RUNNER_TEMP}/promtool-test.log"; then
             echo "a test file references a rule file that matched nothing" >&2
             exit 1
           fi
 
-      # Check the Prometheus configuration files. Each rule file a rule_files section
-      # names is validated too, so this step needs the same lint flags as the rule
-      # check for a lint finding there to be fatal.
       - name: Check config
         if: ${{ inputs.config_files != '' }}
         env:

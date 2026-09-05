@@ -53,6 +53,9 @@ jobs:
   release:
     name: Go Release
     runs-on: ${{ inputs.runs_on }}
+    permissions:
+      contents: write
+      packages: write
     steps:
       # Checkout the code repository with full git history for release tagging
       - name: Checkout

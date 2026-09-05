@@ -53,6 +53,8 @@ jobs:
   fmt:
     name: Run Go Format and Lint
     runs-on: ${{ inputs.runs_on }}
+    permissions:
+      contents: read
 
     steps:
       # Checkout the code repository to access source files
@@ -78,11 +80,14 @@ jobs:
           restore-keys: |
             golangci-lint-${{ runner.os }}-
 
-      # Download and install golangci-lint binary with specified version
+      # The installer is fetched at the pinned tag rather than from the site,
+      # so the script that runs here is the one that version publishes
       - name: Install golangci-lint
+        env:
+          GOLANGCI_LINT_VERSION: ${{ inputs.golangci_lint_version }}
         run: |
-          curl -sSfL https://golangci-lint.run/install.sh | \
-            sh -s -- -b "$(go env GOPATH)/bin" ${{ inputs.golangci_lint_version }}
+          curl -fsSL "https://raw.githubusercontent.com/golangci/golangci-lint/${GOLANGCI_LINT_VERSION}/install.sh" \
+            | sh -s -- -b "$(go env GOPATH)/bin" "$GOLANGCI_LINT_VERSION"
 
       # Clean Go module cache and verify dependencies for consistent builds
       - name: Clean Go cache and modules
@@ -92,9 +97,17 @@ jobs:
 
       # Execute golangci-lint with configuration file and custom arguments
       - name: Run golangci-lint
+        env:
+          CONFIG: ${{ inputs.golangci_lint_config }}
+          TIMEOUT: ${{ inputs.timeout }}
+          EXTRA_ARGS: ${{ inputs.golangci_lint_args }}
         run: |
-          if [ ! -f "${{ inputs.golangci_lint_config }}" ]; then
-            golangci-lint run --timeout ${{ inputs.timeout }} ${{ inputs.golangci_lint_args }}
+          # A missing config means the caller would be linted against defaults it
+          # never chose, so the run stops before spending the time
+          if [ ! -f "$CONFIG" ]; then
+            echo "Error: golangci-lint config not found: $CONFIG" >&2
             exit 1
           fi
-          golangci-lint run --config ${{ inputs.golangci_lint_config }} --timeout ${{ inputs.timeout }} ${{ inputs.golangci_lint_args }}
+
+          read -r -a extra <<<"$EXTRA_ARGS"
+          golangci-lint run --config "$CONFIG" --timeout "$TIMEOUT" "${extra[@]}"

@@ -2,9 +2,9 @@
 
 A reusable GitHub Actions workflow for automated CodeQL security analysis and vulnerability detection.
 
-## 🚀 Usage
+## Usage
 
-### Basic Usage
+### Basic usage
 
 ```yaml
 name: CodeQL Analysis
@@ -24,21 +24,21 @@ jobs:
       runs_on: "ubuntu-latest"
 ```
 
-## ⚙️ Input Parameters
+## Input parameters
 
 | Parameter       | Type   | Description                                  | Default            |
-| --------------- | ------ | -------------------------------------------- | ------------------ |
+| :-------------- | :----- | :------------------------------------------- | :----------------- |
 | `languages`     | string | Languages to analyze as JSON array           | `'["go"]'`         |
 | `runs_on`       | string | Runner to use for the job                    | `ubuntu-latest`    |
 | `fetch_depth`   | number | Number of commits to fetch (0 = all history) | `1`                |
 | `codeql_config` | string | Path to CodeQL configuration file            | `""` (auto-detect) |
 
-## 🔍 Supported Languages
+## Supported languages
 
 CodeQL supports analysis for the following languages:
 
 | Language      | Description     |
-| ------------- | --------------- |
+| :------------ | :-------------- |
 | `javascript`  | JavaScript      |
 | `python`      | Python          |
 | `cpp`         | C and C++       |
@@ -51,15 +51,15 @@ CodeQL supports analysis for the following languages:
 
 **Note:** Languages are specified as a JSON array in the `languages` parameter.
 
-## 📝 Prerequisites
+## Prerequisites
 
 - Repository with source code in supported languages
 - Appropriate permissions configured for security events
 - Optional: Create `.github/codeql-config.yml` for advanced configuration (automatically detected)
 
-## 📖 Advanced Usage
+## Advanced usage
 
-### 1. Multiple Languages Analysis
+### 1. Multiple languages analysis
 
 ```yaml
 jobs:
@@ -69,7 +69,7 @@ jobs:
       languages: '["javascript", "python", "go"]'
 ```
 
-### 2. Custom Configuration File
+### 2. Custom configuration file
 
 ```yaml
 jobs:
@@ -80,7 +80,7 @@ jobs:
       codeql_config: ".github/custom-codeql-config.yml"
 ```
 
-### 3. Full History Analysis
+### 3. Full history analysis
 
 ```yaml
 jobs:
@@ -91,7 +91,7 @@ jobs:
       fetch_depth: 0 # Full history for better analysis
 ```
 
-### 4. Performance Optimization
+### 4. Performance optimization
 
 ```yaml
 jobs:
@@ -102,7 +102,7 @@ jobs:
       runs_on: "ubuntu-latest-4-cores" # Use larger runner for faster analysis
 ```
 
-### 5. Scheduled Security Scans
+### 5. Scheduled security scans
 
 ```yaml
 name: Weekly Security Scan
@@ -117,15 +117,15 @@ jobs:
       languages: '["go"]'
 ```
 
-## 🎯 Auto-Detection Features
+## Auto-detection features
 
-### Configuration Files
+### Configuration files
 
 - **Default**: CodeQL uses built-in configuration for standard analysis
 - **Auto-detect**: Automatically detects `.github/codeql-config.yml` if present
 - **Custom**: Specify alternative config file paths when needed
 
-## 🔧 Configuration File
+## Configuration file
 
 You can create a `.github/codeql-config.yml` file to customize CodeQL analysis:
 
@@ -148,7 +148,7 @@ paths:
   - lib
 ```
 
-## 🛡️ Required Permissions
+## Required permissions
 
 The calling workflow must include these permissions:
 
@@ -160,14 +160,14 @@ permissions:
   contents: read # Only required for workflows in private repositories
 ```
 
-## 📊 Analysis Results
+## Analysis results
 
 - Results are automatically uploaded to GitHub Security tab
 - Alerts are created for discovered vulnerabilities
 - SARIF files are generated for detailed analysis
 - Integration with GitHub Advanced Security features
 
-## Related Links
+## Related links
 
 - [CodeQL Documentation](https://codeql.github.com/docs/)
 - [GitHub Code Scanning](https://docs.github.com/en/code-security/code-scanning)

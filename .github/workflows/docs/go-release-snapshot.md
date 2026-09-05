@@ -2,9 +2,9 @@
 
 A reusable GitHub Actions workflow for validating the GoReleaser configuration and every cross-compilation target without publishing.
 
-## 🚀 Usage
+## Usage
 
-### Basic Usage
+### Basic usage
 
 ```yaml
 name: Release Snapshot
@@ -23,14 +23,14 @@ jobs:
       goreleaser_version: "v2.18.0"
 ```
 
-> [!Note]
+> [!NOTE]
 >
 > The workflow produces no tag, no release and no container image. It runs `goreleaser check` followed by `goreleaser build --snapshot --clean`.
 
-## ⚙️ Input Parameters
+## Input parameters
 
 | Parameter                 | Type   | Description                                  | Default        |
-| ------------------------- | ------ | -------------------------------------------- | -------------- |
+| :------------------------ | :----- | :------------------------------------------- | :------------- |
 | `go_version`              | string | Go version to use                            | `1.24.5`       |
 | `goreleaser_version`      | string | GoReleaser version to use                    | `latest`       |
 | `goreleaser_distribution` | string | GoReleaser distribution                      | `goreleaser`   |
@@ -40,13 +40,13 @@ jobs:
 
 Pin `goreleaser_version` to the release used by `go-release.yml`. A snapshot built with a different version validates a configuration the release run never sees.
 
-## 📝 Prerequisites
+## Prerequisites
 
 A `.goreleaser.yml` or `.goreleaser.yaml` in the repository root, with at least one entry under `builds`. A configuration that sets `builds: [{skip: true}]` has no target to compile, so the snapshot step succeeds without covering anything.
 
-## 📖 Advanced Usage
+## Advanced usage
 
-### 1. Pairing With the Release Workflow
+### 1. Pairing with the release workflow
 
 Regular CI compiles for the runner platform only. This workflow covers the remaining targets, so a break in a platform nobody builds locally surfaces on a schedule rather than during a release.
 
@@ -59,7 +59,7 @@ jobs:
       goreleaser_version: "v2.18.0"
 ```
 
-### 2. Running It on a Pull Request
+### 2. Running it on a pull request
 
 Cross-compiling every target costs far more than a single build, so keep this on a schedule unless a pull request changes the release configuration.
 
@@ -69,7 +69,7 @@ on:
     paths: [".goreleaser.yml"]
 ```
 
-## Related Links
+## Related links
 
-- [GoReleaser build command](https://goreleaser.com/cmd/goreleaser_build/)
-- [GoReleaser check command](https://goreleaser.com/cmd/goreleaser_check/)
+- [GoReleaser build customization](https://goreleaser.com/customization/builds/)
+- [GoReleaser quick start](https://goreleaser.com/quick-start/)

@@ -58,6 +58,8 @@ jobs:
   coverage:
     name: Coverage Test
     runs-on: ${{ inputs.runs_on }}
+    permissions:
+      contents: read
 
     steps:
       # Checkout the code repository to access source files for coverage analysis
@@ -86,43 +88,56 @@ jobs:
 
       # Execute tests with coverage profiling and optional race detection
       - name: Run tests with coverage
+        env:
+          RACE: ${{ inputs.enable_race_detection }}
+          FORMAT: ${{ inputs.gotestsum_format }}
+          COVERAGE_FILE: ${{ inputs.coverage_file }}
+          TEST_PACKAGES: ${{ inputs.test_packages }}
         run: |
-          if [ "${{ inputs.enable_race_detection }}" = "true" ]; then
-            gotestsum --format ${{ inputs.gotestsum_format }} -- -race -coverprofile=${{ inputs.coverage_file }} ${{ inputs.test_packages }}
-          else
-            gotestsum --format ${{ inputs.gotestsum_format }} -- -coverprofile=${{ inputs.coverage_file }} ${{ inputs.test_packages }}
+          args=(--format "$FORMAT" -- "-coverprofile=$COVERAGE_FILE")
+          if [ "$RACE" = "true" ]; then
+            args+=(-race)
           fi
+
+          # The package input is a word list rather than one path, so it is
+          # split before use instead of being passed as a single argument
+          read -r -a packages <<<"$TEST_PACKAGES"
+          gotestsum "${args[@]}" "${packages[@]}"
 
       # Filter coverage data to exclude specified patterns
       - name: Filter coverage data
         if: inputs.coverage_exclude_pattern != ''
+        env:
+          COVERAGE_FILE: ${{ inputs.coverage_file }}
+          EXCLUDE_PATTERN: ${{ inputs.coverage_exclude_pattern }}
         run: |
-          # Create a temporary file for filtered coverage
-          temp_coverage=$(mktemp)
+          filtered="$(mktemp)"
 
-          # Copy the header line
-          head -1 ${{ inputs.coverage_file }} > "$temp_coverage"
-
-          # Filter out lines matching the exclude pattern (accounting for coverage file format)
-          tail -n +2 ${{ inputs.coverage_file }} | grep -vE '${{ inputs.coverage_exclude_pattern }}' >> "$temp_coverage"
-
-          # Replace the original coverage file
-          mv "$temp_coverage" ${{ inputs.coverage_file }}
+          # The header names the mode and has to survive the filter
+          head -1 "$COVERAGE_FILE" >"$filtered"
+          tail -n +2 "$COVERAGE_FILE" | grep -vE "$EXCLUDE_PATTERN" >>"$filtered"
+          mv "$filtered" "$COVERAGE_FILE"
 
       # Parse coverage report and extract overall coverage percentage for validation
       - name: Extract coverage percentage
         id: coverage
+        env:
+          COVERAGE_FILE: ${{ inputs.coverage_file }}
         run: |
-          coverage=$(go tool cover -func=${{ inputs.coverage_file }} | tail -1 | awk '{print $3}' | sed 's/%//')
-          echo "percentage=${coverage}" >> $GITHUB_OUTPUT
+          coverage="$(go tool cover -func="$COVERAGE_FILE" | tail -1 | awk '{print $3}' | tr -d '%')"
+          echo "percentage=${coverage}" >>"$GITHUB_OUTPUT"
           echo "Coverage: ${coverage}%"
 
       # Fail the workflow if coverage falls below the specified threshold
       - name: Check coverage threshold
         if: steps.coverage.outputs.percentage < inputs.coverage_threshold
+        env:
+          COVERAGE_FILE: ${{ inputs.coverage_file }}
+          PERCENTAGE: ${{ steps.coverage.outputs.percentage }}
+          THRESHOLD: ${{ inputs.coverage_threshold }}
         run: |
-          echo "❌ Coverage ${{ steps.coverage.outputs.percentage }}% < ${{ inputs.coverage_threshold }}%"
-          go tool cover -func=${{ inputs.coverage_file }} | grep -v "100.0%"
+          echo "Coverage ${PERCENTAGE}% is below the ${THRESHOLD}% threshold"
+          go tool cover -func="$COVERAGE_FILE" | grep -v "100.0%"
           exit 1
 
       # Display success message when coverage meets or exceeds the threshold

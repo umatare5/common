@@ -1,0 +1,9 @@
+include_fragments = "full"
+require_https = true
+exclude_all_private = true
+# The reusable workflows are referenced by tag, so a link to a release created by
+# merging its own version bump is a 404 until that merge lands.
+exclude = [
+  "^https://github\\.com/umatare5/common/releases/tag/",
+  "^https://github\\.com/umatare5/common/compare/",
+]

@@ -10,12 +10,7 @@
     "no-alt-text": false,
     "no-blanks-blockquote": false
   },
-  "ignores": [
-    "vendor/**",
-    ".copilot_reports/**",
-    ".github/instructions/**",
-    ".github/copilot-instructions.md"
-  ],
+  "ignores": ["vendor/**"],
   "globs": [
     "**/*.md"
   ]

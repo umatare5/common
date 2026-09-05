@@ -2,9 +2,9 @@
 
 A reusable GitHub Actions workflow for automated Git tag creation based on version files.
 
-## 🚀 Usage
+## Usage
 
-### Basic Usage
+### Basic usage
 
 ```yaml
 name: Auto Tag
@@ -24,17 +24,17 @@ jobs:
       runs_on: "ubuntu-24.04"
 ```
 
-## ⚙️ Input Parameters
+## Input parameters
 
 | Parameter        | Type   | Description                | Default                                        |
-| ---------------- | ------ | -------------------------- | ---------------------------------------------- |
+| :--------------- | :----- | :------------------------- | :--------------------------------------------- |
 | `version_file`   | string | Path to the version file   | `VERSION`                                      |
 | `tag_prefix`     | string | Prefix for the git tag     | `v`                                            |
 | `runs_on`        | string | Runner to use for the job  | `ubuntu-24.04`                                 |
 | `git_user_name`  | string | Git user name for commits  | `github-actions[bot]`                          |
 | `git_user_email` | string | Git user email for commits | `github-actions[bot]@users.noreply.github.com` |
 
-## 📋 Prerequisites
+## Prerequisites
 
 Create a version file (default: `VERSION`) in your repository root with the version number:
 
@@ -42,9 +42,9 @@ Create a version file (default: `VERSION`) in your repository root with the vers
 1.2.3
 ```
 
-## 📖 Advanced Usage
+## Advanced usage
 
-### 1. Custom Version File Location
+### 1. Custom version file location
 
 ```yaml
 jobs:
@@ -55,7 +55,7 @@ jobs:
       tag_prefix: "v"
 ```
 
-### 2. Custom Tag Prefix
+### 2. Custom tag prefix
 
 ```yaml
 jobs:
@@ -65,7 +65,7 @@ jobs:
       tag_prefix: "release-"
 ```
 
-### 3. No Prefix Tags
+### 3. No prefix tags
 
 ```yaml
 jobs:
@@ -75,7 +75,7 @@ jobs:
       tag_prefix: ""
 ```
 
-## Related Links
+## Related links
 
 - [Git Tagging Documentation](https://git-scm.com/book/en/v2/Git-Basics-Tagging)
 - [Semantic Versioning](https://semver.org/)

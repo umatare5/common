@@ -1,0 +1,450 @@
+{
+  "$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint-cli2/main/schema/markdownlint-cli2-config-schema.json",
+  "config": {
+    "default": true,
+    "MD003": {"style": "atx"},
+    "MD004": {"style": "dash"},
+    "MD013": false,
+    "MD024": {"siblings_only": true},
+    // Two adjacent GitHub alerts need no blank line between them
+    "MD028": false,
+    "MD029": {"style": "ordered"},
+    "MD046": {"style": "fenced"},
+    "MD048": {"style": "backtick"},
+    "MD050": {"style": "asterisk"},
+    "MD054": {"url_inline": false},
+    "MD055": {"style": "leading_and_trailing"},
+    "MD060": {"style": "aligned", "aligned_delimiter": true}
+  },
+  "overrides": [
+    {
+      "filter": [".github/workflows/README.md"],
+      "combine": "merge",
+      "config": {
+        "MD043": {
+          "match_case": true,
+          "headings": [
+            "# GitHub Actions Reusable Workflows",
+            "## Usage",
+            "*",
+            "## Available workflows"
+          ]
+        }
+      }
+    },
+    {
+      "filter": [".github/workflows/docs/actionlint.md"],
+      "combine": "merge",
+      "config": {
+        "MD043": {
+          "match_case": true,
+          "headings": [
+            "# actionlint Reusable Workflow",
+            "## Usage",
+            "*",
+            "## Input parameters",
+            "*",
+            "## Prerequisites",
+            "*",
+            "## Advanced usage",
+            "*",
+            "## Configuration file",
+            "*",
+            "## Execution mode",
+            "*",
+            "## Auto-detection features",
+            "*",
+            "## What actionlint checks",
+            "*",
+            "## Common issues detected",
+            "*",
+            "## Example output",
+            "*",
+            "## Related links"
+          ]
+        }
+      }
+    },
+    {
+      "filter": [".github/workflows/docs/codeql.md"],
+      "combine": "merge",
+      "config": {
+        "MD043": {
+          "match_case": true,
+          "headings": [
+            "# codeql Reusable Workflow",
+            "## Usage",
+            "*",
+            "## Input parameters",
+            "*",
+            "## Supported languages",
+            "*",
+            "## Prerequisites",
+            "*",
+            "## Advanced usage",
+            "*",
+            "## Auto-detection features",
+            "*",
+            "## Configuration file",
+            "*",
+            "## Required permissions",
+            "*",
+            "## Analysis results",
+            "*",
+            "## Related links"
+          ]
+        }
+      }
+    },
+    {
+      "filter": [".github/workflows/docs/go-release-snapshot.md"],
+      "combine": "merge",
+      "config": {
+        "MD043": {
+          "match_case": true,
+          "headings": [
+            "# go-release-snapshot Reusable Workflow",
+            "## Usage",
+            "*",
+            "## Input parameters",
+            "*",
+            "## Prerequisites",
+            "*",
+            "## Advanced usage",
+            "*",
+            "## Related links"
+          ]
+        }
+      }
+    },
+    {
+      "filter": [".github/workflows/docs/go-release.md"],
+      "combine": "merge",
+      "config": {
+        "MD043": {
+          "match_case": true,
+          "headings": [
+            "# go-release Reusable Workflow",
+            "## Usage",
+            "*",
+            "## Input parameters",
+            "*",
+            "## Prerequisites",
+            "*",
+            "## Advanced usage",
+            "*",
+            "## Related links"
+          ]
+        }
+      }
+    },
+    {
+      "filter": [".github/workflows/docs/go-test-build.md"],
+      "combine": "merge",
+      "config": {
+        "MD043": {
+          "match_case": true,
+          "headings": [
+            "# go-test-build Reusable Workflow",
+            "## Usage",
+            "*",
+            "## Input parameters",
+            "*",
+            "## Prerequisites",
+            "*",
+            "## Advanced usage",
+            "*",
+            "## Related links"
+          ]
+        }
+      }
+    },
+    {
+      "filter": [".github/workflows/docs/go-test-coverage.md"],
+      "combine": "merge",
+      "config": {
+        "MD043": {
+          "match_case": true,
+          "headings": [
+            "# go-test-coverage Reusable Workflow",
+            "## Usage",
+            "*",
+            "## Input parameters",
+            "*",
+            "## Prerequisites",
+            "*",
+            "## Advanced usage",
+            "*",
+            "## Coverage exclusion patterns",
+            "*",
+            "## Related links"
+          ]
+        }
+      }
+    },
+    {
+      "filter": [".github/workflows/docs/go-test-fmt.md"],
+      "combine": "merge",
+      "config": {
+        "MD043": {
+          "match_case": true,
+          "headings": [
+            "# go-test-fmt Reusable Workflow",
+            "## Usage",
+            "*",
+            "## Input parameters",
+            "*",
+            "## Prerequisites",
+            "*",
+            "## Advanced usage",
+            "*",
+            "## Related links"
+          ]
+        }
+      }
+    },
+    {
+      "filter": [".github/workflows/docs/go-vulncheck.md"],
+      "combine": "merge",
+      "config": {
+        "MD043": {
+          "match_case": true,
+          "headings": [
+            "# go-vulncheck Reusable Workflow",
+            "## Usage",
+            "*",
+            "## Input parameters",
+            "*",
+            "## Prerequisites",
+            "*",
+            "## Advanced usage",
+            "*",
+            "## Related links"
+          ]
+        }
+      }
+    },
+    {
+      "filter": [".github/workflows/docs/lychee.md"],
+      "combine": "merge",
+      "config": {
+        "MD043": {
+          "match_case": true,
+          "headings": [
+            "# lychee Reusable Workflow",
+            "## Usage",
+            "*",
+            "## Input parameters",
+            "*",
+            "## Prerequisites",
+            "*",
+            "## Advanced usage",
+            "*",
+            "## Related links"
+          ]
+        }
+      }
+    },
+    {
+      "filter": [".github/workflows/docs/markdownlint.md"],
+      "combine": "merge",
+      "config": {
+        "MD043": {
+          "match_case": true,
+          "headings": [
+            "# markdownlint Reusable Workflow",
+            "## Usage",
+            "*",
+            "## Input parameters",
+            "*",
+            "## Prerequisites",
+            "*",
+            "## Advanced usage",
+            "*",
+            "## Related links"
+          ]
+        }
+      }
+    },
+    {
+      "filter": [".github/workflows/docs/notify-failure.md"],
+      "combine": "merge",
+      "config": {
+        "MD043": {
+          "match_case": true,
+          "headings": [
+            "# notify-failure Reusable Workflow",
+            "## Usage",
+            "*",
+            "## Input parameters",
+            "*",
+            "## Prerequisites",
+            "*",
+            "## Advanced usage",
+            "*",
+            "## Related links"
+          ]
+        }
+      }
+    },
+    {
+      "filter": [".github/workflows/docs/promtool.md"],
+      "combine": "merge",
+      "config": {
+        "MD043": {
+          "match_case": true,
+          "headings": [
+            "# promtool Reusable Workflow",
+            "## Usage",
+            "*",
+            "## Input parameters",
+            "*",
+            "## Prerequisites",
+            "*",
+            "## Advanced usage",
+            "*",
+            "## Related links"
+          ]
+        }
+      }
+    },
+    {
+      "filter": [".github/workflows/docs/tagging.md"],
+      "combine": "merge",
+      "config": {
+        "MD043": {
+          "match_case": true,
+          "headings": [
+            "# Tagging Reusable Workflow",
+            "## Usage",
+            "*",
+            "## Input parameters",
+            "*",
+            "## Prerequisites",
+            "*",
+            "## Advanced usage",
+            "*",
+            "## Related links"
+          ]
+        }
+      }
+    },
+    {
+      "filter": ["AGENTS.md"],
+      "combine": "merge",
+      "config": {
+        "MD043": {
+          "match_case": true,
+          "headings": [
+            "# Repository Instructions",
+            "## Tech Stack",
+            "*",
+            "## Repository Structure",
+            "*",
+            "## Setup and Commands",
+            "*",
+            "## Code Style",
+            "*",
+            "## Testing",
+            "*",
+            "## Commits and PRs",
+            "*",
+            "## Domain Knowledge"
+          ]
+        }
+      }
+    },
+    {
+      "filter": ["README.md", "!*/README.md", "!**/README.md"],
+      "combine": "merge",
+      "config": {
+    // The logo, badges and title block are HTML; the heading they carry is an <h1>
+        "MD033": {"allowed_elements": ["a", "br", "div", "h1", "img", "p", "picture", "source"]},
+        "MD041": {"allow_preamble": true},
+        "MD043": {
+          "match_case": true,
+          "headings": [
+            "# umatare5/common",
+            "## Directories",
+            "*",
+            "## Repositories",
+            "*",
+            "## Acknowledgement",
+            "*",
+            "## License"
+          ]
+        }
+      }
+    },
+    {
+      "filter": ["configs/README.md"],
+      "combine": "merge",
+      "config": {
+        "MD043": {
+          "match_case": true,
+          "headings": [
+            "# Configuration Files",
+            "## Usage",
+            "*",
+            "## Available configurations"
+          ]
+        }
+      }
+    },
+    {
+      "filter": ["examples/README.md"],
+      "combine": "merge",
+      "config": {
+        "MD043": {
+          "match_case": true,
+          "headings": [
+            "# Examples",
+            "## Available examples"
+          ]
+        }
+      }
+    },
+    {
+      "filter": ["examples/go-server/README.md"],
+      "combine": "merge",
+      "config": {
+        "MD043": {
+          "match_case": true,
+          "headings": [
+            "# Go Server Example",
+            "## Features",
+            "*",
+            "## Usage",
+            "*",
+            "## Endpoints",
+            "*",
+            "## Example Requests"
+          ]
+        }
+      }
+    },
+    {
+      "filter": ["renovate/README.md"],
+      "combine": "merge",
+      "config": {
+        "MD043": {
+          "match_case": true,
+          "headings": [
+            "# Renovate Configuration Files",
+            "## Usage",
+            "*",
+            "## Available configurations",
+            "*",
+            "## Update policy",
+            "*",
+            "## Validation"
+          ]
+        }
+      }
+    }
+  ],
+  "globs": ["**/*.md"],
+  "gitignore": true,
+  // A symlink to AGENTS.md, which is linted on its own path
+  "ignores": [".claude/CLAUDE.md"]
+}

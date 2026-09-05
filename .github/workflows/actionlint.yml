@@ -18,6 +18,11 @@ on:
         required: false
         type: number
         default: 1
+      actionlint_version:
+        description: "actionlint release to run"
+        required: false
+        type: string
+        default: "v1.7.12"
       workflow_pattern:
         description: "Pattern for workflow files to check"
         required: false
@@ -29,9 +34,15 @@ on:
         type: string
         default: ""
 
+defaults:
+  run:
+    shell: bash -euo pipefail {0}
+
 jobs:
   actionlint:
     runs-on: ${{ inputs.runs_on }}
+    permissions:
+      contents: read
     steps:
       # Checkout the code repository to access GitHub Actions workflow files
       - name: Checkout
@@ -41,36 +52,30 @@ jobs:
           fetch-depth: ${{ inputs.fetch_depth }}
           persist-credentials: false
 
-      # Download and install actionlint tool for workflow validation
+      # The installer is fetched at the pinned tag rather than at main, so the
+      # script that runs here is the one this version was reviewed against
       - name: Download actionlint
         id: get_actionlint
+        env:
+          ACTIONLINT_VERSION: ${{ inputs.actionlint_version }}
         run: |
-          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
-        shell: bash
+          curl -fsSL "https://raw.githubusercontent.com/rhysd/actionlint/${ACTIONLINT_VERSION}/scripts/download-actionlint.bash" \
+            | bash -s -- "${ACTIONLINT_VERSION#v}"
 
-      # Generate actionlint arguments based on inputs
-      - name: Generate actionlint arguments
-        id: args
-        run: |
-          ACTIONLINT_ARGS=""
-
-          # Add config file if specified and exists
-          if [ -n "${{ inputs.config_file }}" ] && [ -f "${{ inputs.config_file }}" ]; then
-            ACTIONLINT_ARGS="$ACTIONLINT_ARGS -config-file ${{ inputs.config_file }}"
-          fi
-
-          # Add workflow pattern if specified
-          if [ -n "${{ inputs.workflow_pattern }}" ]; then
-            ACTIONLINT_ARGS="$ACTIONLINT_ARGS ${{ inputs.workflow_pattern }}"
-          fi
-
-          echo "args=$ACTIONLINT_ARGS" >> $GITHUB_OUTPUT
-        shell: bash
-
-      # Run actionlint to validate all GitHub Actions workflow files for syntax and best practices
+      # A finding has to fail the step, because a linter whose exit code is
+      # discarded reports success on every run and the check becomes decorative
       - name: Check workflow files
+        env:
+          EXECUTABLE: ${{ steps.get_actionlint.outputs.executable }}
+          CONFIG_FILE: ${{ inputs.config_file }}
+          WORKFLOW_PATTERN: ${{ inputs.workflow_pattern }}
         run: |
-          echo "Running actionlint to check GitHub Actions workflow files..."
-          ${{ steps.get_actionlint.outputs.executable }} ${{ steps.args.outputs.args }} \
-            || echo "Issues found in workflow files - please review and fix manually"
-        shell: bash
+          args=()
+          if [ -n "$CONFIG_FILE" ] && [ -f "$CONFIG_FILE" ]; then
+            args+=(-config-file "$CONFIG_FILE")
+          fi
+          if [ -n "$WORKFLOW_PATTERN" ]; then
+            args+=("$WORKFLOW_PATTERN")
+          fi
+
+          "$EXECUTABLE" "${args[@]}"
