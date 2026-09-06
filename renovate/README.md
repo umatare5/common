@@ -28,14 +28,15 @@ Keep a rule here once two or more repositories share it. A rule used by a single
 
 ## Update policy
 
-| Item           | Value                                      |
-| :------------- | :----------------------------------------- |
-| PR creation    | Monday, 12:00-21:00 JST                    |
-| Automerge      | Thursday, 12:00-21:00 JST, minor and below |
-| Major updates  | Manual merge                               |
-| Cooldown       | 7 days after release                       |
-| Batching       | One PR for all minor, one for all patch    |
-| Security fixes | Bypass both the schedule and the cooldown  |
+| Item                | Value                                         |
+| :------------------ | :-------------------------------------------- |
+| PR creation         | Monday, 12:00-21:00 JST                       |
+| Automerge           | Thursday, 12:00-21:00 JST, minor and below    |
+| Major updates       | Manual merge                                  |
+| Cooldown            | 7 days after release                          |
+| Batching            | One PR for all minor, one for all patch       |
+| Security fixes      | Bypass both the schedule and the cooldown     |
+| Indirect Go modules | Updated only when a vulnerability is reported |
 
 ## Validation
 

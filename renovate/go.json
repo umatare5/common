@@ -4,7 +4,8 @@
   "extends": [
     "./default.json",
     "./github-actions.json",
-    "./workflow-versions.json"
+    "./workflow-versions.json",
+    "security:gomodIndirectSecurityUpdates"
   ],
   "postUpdateOptions": ["gomodTidy"]
 }
