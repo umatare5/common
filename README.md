@@ -5,6 +5,9 @@
 
 This repository is the central hub for reusable GitHub Actions workflows, custom actions, and configurations that can be used across multiple repositories. It is designed to streamline development processes and enhance productivity by providing ready-to-use solutions for common tasks.
 
+> [!IMPORTANT]
+> This repository is maintained for the repositories listed below, and its contents change as those repositories require, so pin every reference to a released tag rather than to `main`.
+
 ## Directories
 
 The following directories are intended to be used from other repositories:
