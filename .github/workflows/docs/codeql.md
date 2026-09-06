@@ -55,7 +55,7 @@ CodeQL supports analysis for the following languages:
 
 - Repository with source code in supported languages
 - Appropriate permissions configured for security events
-- Optional: Create `.github/codeql-config.yml` for advanced configuration (automatically detected)
+- Optional: A CodeQL configuration file, named through the `codeql_config` input
 
 ## Advanced usage
 
@@ -117,17 +117,11 @@ jobs:
       languages: '["go"]'
 ```
 
-## Auto-detection features
-
-### Configuration files
-
-- **Default**: CodeQL uses built-in configuration for standard analysis
-- **Auto-detect**: Automatically detects `.github/codeql-config.yml` if present
-- **Custom**: Specify alternative config file paths when needed
-
 ## Configuration file
 
-You can create a `.github/codeql-config.yml` file to customize CodeQL analysis:
+CodeQL runs its default query suite unless `codeql_config` names a configuration file. The path reaches `github/codeql-action/init` unchanged, and that action reads no file on its own, so a file the input does not name has no effect wherever it sits.
+
+The file itself follows the CodeQL schema:
 
 ```yaml
 name: "Custom CodeQL Config"
