@@ -77,4 +77,4 @@ jobs:
         env:
           SCAN_PACKAGES: ${{ inputs.scan_packages }}
         run: |
-          go run golang.org/x/vuln/cmd/govulncheck@v1.7.0 "${SCAN_PACKAGES}"
+          go run golang.org/x/vuln/cmd/govulncheck@v1.8.0 "${SCAN_PACKAGES}"
