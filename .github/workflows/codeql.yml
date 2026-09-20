@@ -4,8 +4,6 @@ name: Reusable CodeQL Analysis Workflow
 # permissions:
 #   security-events: write  # Required for all workflows
 #   packages: read          # Required to fetch internal or private CodeQL packs
-#   actions: read           # Only required for workflows in private repositories
-#   contents: read          # Only required for workflows in private repositories
 
 on:
   workflow_call:
@@ -36,7 +34,7 @@ jobs:
     name: Analyze
     runs-on: ${{ inputs.runs_on }}
     permissions:
-      contents: read
+      contents: none
       packages: read
       security-events: write
 

@@ -13,8 +13,6 @@ on: [push, pull_request]
 permissions:
   security-events: write
   packages: read
-  actions: read
-  contents: read
 
 jobs:
   codeql:
@@ -150,8 +148,6 @@ The calling workflow must include these permissions:
 permissions:
   security-events: write # Required for all workflows
   packages: read # Required to fetch internal or private CodeQL packs
-  actions: read # Only required for workflows in private repositories
-  contents: read # Only required for workflows in private repositories
 ```
 
 ## Analysis results
