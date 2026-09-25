@@ -70,7 +70,7 @@ jobs:
 
 ### 2. Narrowing the inputs
 
-`paths` takes one input per line and accepts a file, a directory or a glob. A glob is matched by lychee itself and therefore bypasses the `.gitignore` and hidden-directory exclusions that a directory input honours.
+`paths` takes one input per line and accepts a file, a directory or a glob. A glob is matched by lychee itself and therefore bypasses the `.gitignore` and hidden-directory exclusions that a directory input honors.
 
 ```yaml
 jobs:

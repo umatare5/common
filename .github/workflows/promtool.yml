@@ -99,7 +99,7 @@ jobs:
       # Check the rule files for syntax and for the lint findings promtool reports.
       # --lint-fatal is required: without it a lint finding prints FAILED and the
       # command still exits 0, so the step would pass while reporting a problem.
-      # An unrecognised lint value is reported as a warning and leaves linting
+      # An unrecognized lint value is reported as a warning and leaves linting
       # off, so it is rejected before promtool runs
       - name: Validate the rule check inputs
         env:
