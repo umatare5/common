@@ -1,0 +1,52 @@
+name: Reusable Coverage Badge Workflow
+
+# Required permissions for calling workflow:
+# permissions:
+#   contents: write       # For replacing the badges branch
+
+on:
+  workflow_call:
+    inputs:
+      badge:
+        description: "Base64 SVG badge, as the badge output of go-test-coverage.yml"
+        required: true
+        type: string
+      runs_on:
+        description: "Runner to use for the job"
+        required: false
+        type: string
+        default: "ubuntu-24.04"
+
+jobs:
+  badge:
+    name: Coverage Badge
+    runs-on: ${{ inputs.runs_on }}
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      BADGE: ${{ inputs.badge }}
+      BADGE_BRANCH: badges
+
+    steps:
+      # Only the run for the default branch's latest commit writes, so a late or re-run job
+      # cannot roll the badge back, and an unchanged badge adds no commit
+      - name: Check whether the badge branch needs this badge
+        id: plan
+        run: |
+          tip="$(gh api "repos/${GITHUB_REPOSITORY}/commits/HEAD" --jq .sha)"
+          stored="$(gh api "repos/${GITHUB_REPOSITORY}/contents/coverage.svg?ref=${BADGE_BRANCH}" --jq .content 2>/dev/null | tr -d '\n')" || true
+          echo "Default branch tip ${tip}, this run ${GITHUB_SHA}"
+          if [ "$tip" = "$GITHUB_SHA" ] && [ "$stored" != "$BADGE" ]; then
+            echo "write=true" >>"$GITHUB_OUTPUT"
+          fi
+
+      # A root commit replaces the branch, so it holds the current badge and nothing else
+      - name: Commit the badge to the badge branch
+        if: steps.plan.outputs.write == 'true'
+        run: |
+          tree="$(jq -n --arg svg "$BADGE" '{tree: [{path: "coverage.svg", mode: "100644", type: "blob", content: ($svg | @base64d)}]}' |
+            gh api "repos/${GITHUB_REPOSITORY}/git/trees" --input - --jq .sha)"
+          commit="$(gh api "repos/${GITHUB_REPOSITORY}/git/commits" -f message="Update the coverage badge" -f tree="$tree" --jq .sha)"
+          gh api --method PATCH "repos/${GITHUB_REPOSITORY}/git/refs/heads/${BADGE_BRANCH}" -f sha="$commit" -F force=true --silent ||
+            gh api "repos/${GITHUB_REPOSITORY}/git/refs" -f ref="refs/heads/${BADGE_BRANCH}" -f sha="$commit" --silent
