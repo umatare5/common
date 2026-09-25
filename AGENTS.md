@@ -45,7 +45,7 @@
 
 - Bump `VERSION` in the same pull request that changes a published workflow; merging it creates the tag
 - Consumers pin `umatare5/common/.github/workflows/x.yml@<sha> # vX.Y.Z`, so an unreleased change reaches nobody
-- Follow Conventional Commits, and keep one behavioural change per commit
+- Follow Conventional Commits, and keep one behavioral change per commit
 
 ## Domain Knowledge
 
