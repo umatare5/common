@@ -39,6 +39,7 @@ jobs:
 | `gotestsum_format`         | string  | gotestsum output format                             | `testname`       |
 | `enable_race_detection`    | boolean | Enable race detection in tests                      | `true`           |
 | `coverage_exclude_pattern` | string  | Regular expression pattern to exclude from coverage | `""`             |
+| `enable_badge`             | boolean | Render the badge that `coverage-badge.yml` stores   | `false`          |
 
 ## Prerequisites
 
@@ -94,6 +95,12 @@ jobs:
   fmt:
     uses: umatare5/common/.github/workflows/go-test-fmt.yml@main
 ```
+
+## Coverage badge
+
+With `enable_badge: true`, every run outside a pull request renders a coverage badge and returns it as the `badge` output, which [`coverage-badge.yml`](./coverage-badge.md) stores for a README. Pull request runs render none, so they never reach the job that writes.
+
+octocov draws the badge from the filtered profile and rounds down to one decimal, so the badge can read 0.1 below the percentage the threshold check prints. The release is pinned by digest and runs in the read-only test job, and the badge is rendered before the threshold check, so a run below the threshold still renders one. It needs an x64 runner, because the pinned release is the `linux_amd64` build.
 
 ## Coverage exclusion patterns
 

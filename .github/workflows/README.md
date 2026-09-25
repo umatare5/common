@@ -24,6 +24,7 @@ jobs:
 | [`codeql.yml`](./codeql.yml)                                   | CodeQL security analysis          | [Guide](./docs/codeql.md)                  |
 | [`go-test-build.yml`](./go-test-build.yml)                     | Go testing and binary build       | [Guide](./docs/go-test-build.md)           |
 | [`go-test-coverage.yml`](./go-test-coverage.yml)               | Go coverage with a threshold      | [Guide](./docs/go-test-coverage.md)        |
+| [`coverage-badge.yml`](./coverage-badge.yml)                   | Coverage badge on a branch        | [Guide](./docs/coverage-badge.md)          |
 | [`go-test-fmt.yml`](./go-test-fmt.yml)                         | Go formatting and lint            | [Guide](./docs/go-test-fmt.md)             |
 | [`go-release.yml`](./go-release.yml)                           | Go release via GoReleaser         | [Guide](./docs/go-release.md)              |
 | [`go-release-snapshot.yml`](./go-release-snapshot.yml)         | GoReleaser config and build check | [Guide](./docs/go-release-snapshot.md)     |

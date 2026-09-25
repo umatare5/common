@@ -53,6 +53,15 @@ on:
         required: false
         type: string
         default: ""
+      enable_badge:
+        description: "Render the coverage badge for coverage-badge.yml outside pull requests"
+        required: false
+        type: boolean
+        default: false
+    outputs:
+      badge:
+        description: "Base64 SVG coverage badge; empty unless enable_badge rendered one"
+        value: ${{ jobs.coverage.outputs.badge }}
 
 jobs:
   coverage:
@@ -60,6 +69,8 @@ jobs:
     runs-on: ${{ inputs.runs_on }}
     permissions:
       contents: read
+    outputs:
+      badge: ${{ steps.badge.outputs.svg }}
 
     steps:
       # Checkout the code repository to access source files for coverage analysis
@@ -127,6 +138,27 @@ jobs:
           coverage="$(go tool cover -func="$COVERAGE_FILE" | tail -1 | awk '{print $3}' | tr -d '%')"
           echo "percentage=${coverage}" >>"$GITHUB_OUTPUT"
           echo "Coverage: ${coverage}%"
+
+      # Rendered before the threshold check, so a run below the threshold still renders a badge.
+      # The octocov release is pinned by digest and runs in this read-only job. octocov joins
+      # every coverage path onto the config's directory, so the profile is copied beside it
+      - name: Render coverage badge
+        id: badge
+        if: inputs.enable_badge && github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          COVERAGE_FILE: ${{ inputs.coverage_file }}
+          OCTOCOV_VERSION: v0.80.1
+          OCTOCOV_SHA256: 012c652747daef1631a3d2f5613ccb40347411b007049518f191d24c1d7bc850
+        run: |
+          archive="octocov_${OCTOCOV_VERSION}_linux_amd64.tar.gz"
+          gh release download "$OCTOCOV_VERSION" --repo k1LoW/octocov --pattern "$archive" --dir "$RUNNER_TEMP"
+          echo "${OCTOCOV_SHA256}  ${RUNNER_TEMP}/${archive}" | sha256sum --check --strict
+          tar -xzf "${RUNNER_TEMP}/${archive}" -C "$RUNNER_TEMP" octocov
+          cp "$COVERAGE_FILE" "${RUNNER_TEMP}/coverage.out"
+          printf 'coverage:\n  paths:\n    - coverage.out\n' >"${RUNNER_TEMP}/octocov.yml"
+          "${RUNNER_TEMP}/octocov" badge coverage --config "${RUNNER_TEMP}/octocov.yml" --out "${RUNNER_TEMP}/coverage.svg"
+          echo "svg=$(base64 --wrap=0 "${RUNNER_TEMP}/coverage.svg")" >>"$GITHUB_OUTPUT"
 
       # Fail the workflow if coverage falls below the specified threshold
       - name: Check coverage threshold
